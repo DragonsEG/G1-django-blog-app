@@ -1,0 +1,105 @@
+{% comment %} {% extends "main.html" %}
+{% block content %}
+    <div class="post-entry">
+        <h2>{{ object.title }}</h2>
+        <p>{{ object.content }}</p>
+    </div>
+    <a href="{% url 'post_edit' post.pk %}"> Edit Blog Post</a>
+    <a href="{% url 'post_delete' post.pk %}"> Delete Blog Post</a>
+{% endblock content %} {% endcomment %}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .post-entry {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        
+        .post-entry h2 {
+            font-size: 28px;
+            margin: 0;
+            color: #007BFF;
+        }
+        
+        .post-entry p {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        
+        .post-entry a {
+            text-decoration: none;
+            color: #007BFF;
+            margin-top: 20px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        
+        .post-entry a:hover {
+            color: #0056b3;
+        }
+
+        a.edit-link,
+        a.delete-link {
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+            margin-right: 20px;
+            transition: color 0.3s ease;
+        }
+
+        a.edit-link:hover,
+        a.delete-link:hover {
+            color: #0056b3;
+        }
+        .nav-left {
+            background-color: #007BFF;
+            padding: 10px 20px;
+            color: #fff;
+        }
+        
+        .nav-left h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
+        .nav-left a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-left a:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-left">
+        <h1><a href="{% url 'home' %}">Django Blog</a></h1>
+    </div>
+    <div class="post-entry">
+        <h2>{{ object.title }}</h2>
+        <p>{{ object.content }}</p>
+        <a href="{% url 'post_edit' post.pk %}" class="edit-link">Edit Blog Post</a>
+        <a href="{% url 'post_delete' post.pk %}" class="delete-link">Delete Blog Post</a>
+        <p class="back-link"><a href="{% url 'home' %}" class="back-link">Back to Blog List</a></p>
+    </div>
+</body>
+</html>
+
