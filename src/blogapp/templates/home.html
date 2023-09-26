@@ -1,0 +1,35 @@
+{% extends "main.html" %}
+{% block content %}
+{% for post in post_list %}
+    <div class="post-entry">
+        <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
+        <p>{{ post.content }}</p>
+    </div>
+{% endfor %}
+{% endblock content %}
+
+
+
+
+
+{% comment %} .nav-left {
+    background-color: #007BFF;
+    padding: 10px 20px;
+    color: #fff;
+}
+
+.nav-left h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.nav-left a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.nav-left a:hover {
+    color: #0056b3;
+} {% endcomment %}
