@@ -18,7 +18,8 @@
 				{% if request.user == Blog.author %}
 				<div class="buttons">
 					<a href="{% url "editBlog" blog_id=Blog.ID %}" class="btn btn-warning" role="button">Edit</a> 
-					<a href="{% url "deleteBlog" blog_id=Blog.ID %}" class="btn btn-danger" role="button">Delete</a> 
+					<a href="{% url "deleteBlog" blog_id=Blog.ID %}" class="btn btn-danger" role="button" onclick="return confirm('Are you sure you want to delete this blog post?');">Delete</a> 
+
 				</div> 
 				{% endif %}
 			</div>
