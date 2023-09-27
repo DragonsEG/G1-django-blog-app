@@ -1,0 +1,38 @@
+.little {
+	font-weight: 600;
+	font-size: 15px;
+}
+
+.content {
+	margin-top: 20px;
+}
+
+pre {
+	font-family: var(--bs-body-font-family);
+}
+
+.commentSection {
+	display: flex;
+	align-items: center;
+	margin-top: 20px;
+}
+
+.img-icon {
+	width: 50px; /* Adjust the width as needed */
+	height: 50px; /* Maintain aspect ratio */
+	border-radius: 50%;
+}
+
+.form {
+	flex: 1;
+}
+
+input[type="text"] {
+	width: 100%;
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}

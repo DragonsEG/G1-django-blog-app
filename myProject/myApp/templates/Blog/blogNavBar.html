@@ -1,0 +1,47 @@
+{% block content %}
+<nav class="navbar sticky-top navbar-expand-lg" style="background-color: white;">
+	<div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+      Blog
+    </a>
+		<button
+			class="navbar-toggler"
+			type="button"
+			data-bs-toggle="collapse"
+			data-bs-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent"
+			aria-expanded="false"
+			aria-label="Toggle navigation"
+		>
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					{% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="#">Welcome, {{user.username}}</a>
+          </li>
+					<li class="nav-item">
+						<a class="d-flex nav-link" href="/logout">Logout</a>
+					</li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">My Posts</a>
+          </li>
+					{% else %}
+					<li class="nav-item">
+						<a class="d-flex nav-link" href="/login">Login</a>
+					</li>
+					{% endif %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "showBlogs" %}">Blogs</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "createBlog"%}">Create a Blog</a>
+          </li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</nav>
+{% endblock %}
