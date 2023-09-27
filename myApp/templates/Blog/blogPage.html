@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+	{% load static %} {% load crispy_forms_tags %}
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
+		<link href="{% static 'css/home.css' %}" rel="stylesheet" />
+		<link href="{% static 'css/blogPage.css' %}" rel="stylesheet" />
+		<title>Blog Post</title>
+	</head>
+	<body>
+		{% include "Blog/blogNavBar.html" %}
+		<div class="container-sm container">
+			<div class="header">
+				<h1>{{Blog.title}}</h1> 
+				{% if request.user == Blog.author %}
+				<div class="buttons">
+					<a href="{% url "editBlog" blog_id=Blog.ID %}" class="btn btn-warning" role="button">Edit</a> 
+					<a href="{% url "deleteBlog" blog_id=Blog.ID %}" class="btn btn-danger" role="button">Delete</a> 
+				</div> 
+				{% endif %}
+			</div>
+			<div class="little">
+				<div>Created By: {{ Blog.author.username }}</div>
+				<div>Created At: {{ Blog.created_at }}</div>
+			</div>
+			<hr />
+			<div class="content">
+				<pre class="text-break fs-6" style="white-space: pre-wrap;">{{Blog.content}}</pre>
+			</div>
+		</div>
+
+		<div class="container-sm commentSection">
+    {% if perms.myApp.add_comment %}
+			<form class="row g-3 form" method="POST" action="{% url "addComment" blog_id=Blog.ID %}">
+        {% csrf_token %}
+				<div class="col-auto">
+					<img
+						class="img-icon"
+						src="{% static 'images/Red_Dead_Redemption_II.jpg'%}"
+					/>
+				</div>
+				<div class="col-auto">
+					<input
+						class="form-control"
+						type="text"
+						name="comment"
+						placeholder="Add Your Comment..."
+					/>
+				</div>
+				<div class="col-auto">
+					<button type="submit" class="btn btn-primary mb-3">Post</button>
+				</div>
+				<hr />
+			</form>
+    {% endif %}
+		</div>
+
+    <div class="container-sm container">
+			<h1>Comments</h1>
+      <hr>
+      {% for comment in Comments %}
+      <div class="container-sm container">
+			<div class="little">
+				<h5>{{ comment.user.username }}</h5>
+				<div>{{ comment.created_at }}</div>
+			</div>
+			<hr />
+			<div class="content">
+				<pre class="text-break fs-6">{{comment.content}}</pre>
+			</div>
+    </div>
+      {% endfor %}
+		</div>
+	</body>
+</html>

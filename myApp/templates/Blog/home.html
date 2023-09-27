@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+	{% load static %} {% load crispy_forms_tags %}
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
+		<link href="{% static 'css/home.css' %}" rel="stylesheet" />
+		<title>Create Blog</title>
+	</head>
+	<body>
+		{% include "Blog/blogNavBar.html" %}
+		<div class="container-md">
+			<div class="feed-search">
+				<h1>Feed</h1>    
+				<div> 
+					<form method="get" class="search-form">
+						<input type="text" name="q" placeholder="Search" value="{{ query }}">
+						<button type="submit">Search</button>
+					</form>
+				</div>
+			</div>
+			{% for blog in Blogs%}
+			<div class="container-sm container">
+				<h2><a href="{% url "blogPage" id=blog.ID %}">{{ blog.title }}</a></h2>
+				<div class="little">
+					<div>Created By: {{ blog.author.username }}</div>
+					<div>Created At: {{blog.created_at}}</div>
+				</div>
+			</div>
+      {% if perms.myApp.add_blog %}
+				<a href="{% url "createBlog" %}" class="create-post-btn">Create a Post</a>
+      {% endif %}
+			{% endfor %}
+		</div>
+		<a href="{% url 'publish_blog_posts' %}">publish</a>
+	</body>
+</html>
+
+

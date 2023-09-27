@@ -1,0 +1,23 @@
+
+
+
+<div class="container">
+    <h2 class="page-title">All Published Posts</h2>
+    <form method="get" class="search-form">
+        <input type="text" name="q" placeholder="Search posts..." value="{{ query }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <ul class="post-list">
+        {% for blog in Blogs%}
+        <div class="container-sm container">
+            <h2><a href="{% url "blogPage" id=blog.ID %}">{{ blog.title }}</a></h2>
+            <div class="little">
+                <div>Created By: {{ blog.author.username }}</div>
+                <div>Created At: {{blog.created_at}}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </ul>
+</div>
+
