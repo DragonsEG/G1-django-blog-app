@@ -33,6 +33,7 @@
 		</div>
 
 		<div class="container-sm commentSection">
+    {% if perms.myApp.add_comment %}
 			<form class="row g-3 form" method="POST" action="{% url "addComment" blog_id=Blog.ID %}">
         {% csrf_token %}
 				<div class="col-auto">
@@ -54,6 +55,7 @@
 				</div>
 				<hr />
 			</form>
+    {% endif %}
 		</div>
 
     <div class="container-sm container">

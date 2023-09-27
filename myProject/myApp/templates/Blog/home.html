@@ -29,7 +29,9 @@
 					<div>Created At: {{blog.created_at}}</div>
 				</div>
 			</div>
-			<a href="{% url "createBlog" %}" class="create-post-btn">Create a Post</a>
+      {% if perms.myApp.add_blog %}
+				<a href="{% url "createBlog" %}" class="create-post-btn">Create a Post</a>
+      {% endif %}
 			{% endfor %}
 		</div>
 	</body>

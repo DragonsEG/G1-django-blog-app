@@ -4,7 +4,7 @@ from .models import Blog, comment
 from .forms import NewUserForm,BlogForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm 
-
+from django.contrib.auth.decorators import login_required,permission_required
 
 # Create your views here.
 def register(request):
@@ -79,26 +79,20 @@ def createBlog(request):
         return redirect("login")
     
 def showBlogs(request, search=None):
-    if request.user.is_authenticated:
         # Get blogs Objects from Blog Model ordered by creation date and time in descending order
         blogs = Blog.objects.all().order_by("-created_at")
         context = {"Blogs": blogs} 
         # Render home page with help of context data (the Dynamic content)          
-        return render(request, "Blog/home.html", context)  
-    else:
-        return redirect("login")
+        return render(request, "Blog/home.html", context)
 
 def blogPage(request, id):
-    if request.user.is_authenticated:
         # Get object from Blog Model by its ID
         _blog = Blog.objects.get(ID=id)
         comments = comment.objects.filter(blog=_blog).order_by("-created_at")
         context = {"Blog": _blog , "Comments": comments} 
         # Render home page with help of context data (the Dynamic content)          
-        return render(request, "Blog/blogPage.html", context)  
-    else:
-        return redirect("login")    
-    
+        return render(request, "Blog/blogPage.html", context)
+
 def addComment(request, blog_id):
     if request.user.is_authenticated:    
         if request.method == "POST":
