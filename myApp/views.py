@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from .models import Blog, comment
 from .forms import NewUserForm,BlogForm
@@ -61,21 +61,19 @@ def createBlog(request):
             if form.is_valid():
                 blog = form.save(commit=False)
                 blog.author = request.user
-                publish_status = request.POST.get('publish_status')  
+                publish_status = form.cleaned_data.get('publish_status')
                 is_draft = publish_status == 'draft'
-                posts = Blog.objects.filter(author=request.user, is_draft=False).order_by('-created_at')
+                blog.is_draft = is_draft
                 blog.save()
                 
                 return redirect("showBlogs")
         else:
             form = BlogForm()
-            
-        context = {"form": form} 
+        context = {"form": form}
         return render(request, "Blog/create.html", context)
     else:
         return redirect("login")
-    
-    
+
     
 def showBlogs(request):
     query = request.GET.get('q')
@@ -135,18 +133,28 @@ def editBlog(request, blog_id):
         return redirect("login")
 
 def deleteBlog(request, blog_id):
-    if request.user.is_authenticated:
-        obj = Blog.objects.get(ID=blog_id)
-        obj.delete()
-        return redirect("showBlogs")
-    else:
-        return redirect("login")    
+    post = get_object_or_404(Blog, pk=blog_id)
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            obj = Blog.objects.get(ID=blog_id)
+            obj.delete()
+            return redirect("showBlogs")
+        else:
+            return redirect("login")  
+    return render(request, 'blog/post_delete.html', {'post': post})  
     
     
 def publish_blog_post(request):
-    query = request.GET.get('q')  
-    posts = Blog.objects.filter(author=request.user, is_draft=False).order_by('-created_at')
+    query = request.GET.get('q')
+    show_drafts = request.GET.get('show_drafts')  # Add this line
+
+    # Filter based on the show_drafts parameter
+    if show_drafts:
+        posts = Blog.objects.filter(author=request.user, is_draft=True).order_by('-created_at')
+    else:
+        posts = Blog.objects.filter(author=request.user, is_draft=False).order_by('-created_at')
 
     if query:
         posts = posts.filter(Q(title__icontains=query) | Q(content__icontains=query))
-    return render (request, 'blog/publish.html',{'posts': posts})
+    
+    return render(request, 'blog/publish.html', {'posts': posts, 'show_drafts': show_drafts})  # Pass show_drafts to the template
