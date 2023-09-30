@@ -15,7 +15,7 @@
 <div class="container">
     <h2 class="page-title">All Posts</h2>
     <form method="get" class="search-form">
-        <input type="text" name="q" placeholder="Search posts..." value="{{ query }}">
+        <input type="text" name="q" placeholder="Search posts..." {% if query %}value="{{ query }}"{% endif %}>
         <button type="submit">Search</button>
     </form>
 
