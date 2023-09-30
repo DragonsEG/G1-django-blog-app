@@ -33,9 +33,8 @@
 		</div>
 
 		<div class="container-sm commentSection">
-    {% if perms.myApp.add_comment %}
 			<form class="row g-3 form" method="POST" action="{% url "addComment" blog_id=Blog.ID %}">
-        {% csrf_token %}
+				{% csrf_token %}
 				<div class="col-auto">
 					<img
 						class="img-icon"
@@ -55,24 +54,23 @@
 				</div>
 				<hr />
 			</form>
-    {% endif %}
 		</div>
 
-    <div class="container-sm container">
+		<div class="container-sm container">
 			<h1>Comments</h1>
-      <hr>
-      {% for comment in Comments %}
-      <div class="container-sm container">
-			<div class="little">
-				<h5>{{ comment.user.username }}</h5>
-				<div>{{ comment.created_at }}</div>
+			<hr>
+			{% for comment in Comments %}
+			<div class="container-sm container">
+				<div class="little">
+					<h5>{{ comment.user.username }}</h5>
+					<div>{{ comment.created_at }}</div>
+				</div>
+				<hr />
+				<div class="content">
+					<pre class="text-break fs-6">{{comment.content}}</pre>
+				</div>
 			</div>
-			<hr />
-			<div class="content">
-				<pre class="text-break fs-6">{{comment.content}}</pre>
-			</div>
-    </div>
-      {% endfor %}
+			{% endfor %}
 		</div>
 	</body>
 </html>

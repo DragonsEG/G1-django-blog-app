@@ -16,6 +16,12 @@
 			<form method="POST">
 				<div>
 					{% csrf_token %} {% crispy form %}
+					<label for="id_groups">Select Permission Level:</label>
+					<select id="id_groups" name="group">
+						<option value="Viewer">Viewer</option>
+						<option value="Member">Member</option>
+						<option value="admin">Admin</option>
+					</select>
 					<button class="btn btn-primary" type="submit">Register</button>
 				</div>
 			</form>

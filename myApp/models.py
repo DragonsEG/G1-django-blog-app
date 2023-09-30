@@ -1,7 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import User
-
+from django.contrib.auth.models import User , Group
 # Create your models here.  
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    auth_level = models.CharField(max_length=10, choices=[('viewer', 'Viewer'), ('writer', 'Writer'), ('admin', 'Admin')])
+    groups = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
+
 class Blog(models.Model):
   ID = models.BigAutoField(auto_created = True, primary_key=True, verbose_name="ID")
   title = models.CharField(max_length=200)

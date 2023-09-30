@@ -47,11 +47,9 @@ class NewUserForm(UserCreationForm):
     # super(NewUserForm, self).save(commit=False) line calls the save method of the parent class (UserCreationForm).
     # This parent class is responsible for handling the form data
     # And creating a new instance of the User model with the provided data.
-    def save(self):
-        user = super(NewUserForm, self).save(commit=False)
-        user.save()
-        writer = Group.objects.get(name="Writer")
-        # Add The User to Group User Called Writer (Has the Writer Permission)
-        user.groups.add(writer)
+    # def save(self):
+    #     user = super(NewUserForm, self).save(commit=False)
+    #     user.save()
+    #     # Add The User to Group User Called Writer (Has the Writer Permission)
 
-        return user
+    #     return user

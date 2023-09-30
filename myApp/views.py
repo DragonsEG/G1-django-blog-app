@@ -5,26 +5,47 @@ from .forms import NewUserForm,BlogForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm 
 from django.contrib.auth.decorators import login_required,permission_required
+from django.http import HttpResponse
 from django.db.models import Q
+from django.contrib.auth.models import Group
+from django.contrib.auth.decorators import user_passes_test
+
+def user_is_member(user):
+    return user.is_superuser or user.groups.filter(name='Member').exists()
+
+def user_is_viewer(user):
+    return user.is_superuser or user.groups.filter(name='Viewer').exists()
 
 
-# Create your views here.
+from django.contrib.auth.models import Group
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from .forms import NewUserForm
+from django.contrib.auth.models import Group  # Import the Group model at the top of your views.py
+
+
 def register(request):
-	if request.method == "POST":
-		form = NewUserForm(request.POST)
-		if form.is_valid():
-            # If the Request was POST and the form data is valid, the form will be saved and the user will be created
-            # save() returns the user object
-			user = form.save()
+    if request.method == "POST":
+        form = NewUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            group_name = request.POST.get('group')
+            
+            if group_name:  
+                group, created = Group.objects.get_or_create(name=group_name)
+                user.groups.add(group)
+            
             # This User will be logged in
-			login(request, user)
+            login(request, user)
             # Will be Redirected to Home page showing a success message
-			messages.success(request, "Registration successful." )
-			return redirect("showBlogs")
-		messages.error(request, "Unsuccessful registration. Invalid information.")
+            messages.success(request, "Registration successful.")
+            return redirect("showBlogs")
+        else:
+            messages.error(request, "Unsuccessful registration. Invalid information.")
 
-	form = NewUserForm()
-	return render (request, "Authentication/register.html", context={"form":form})
+    form = NewUserForm()
+    return render(request, "Authentication/register.html", context={"form": form})
+
 
 def loginView(request):
 	if request.method == "POST":
@@ -54,6 +75,11 @@ def logoutRequest(request):
     messages.info(request, "You have successfully logged out.") 
     return redirect("login")
 
+def not_allowed(request):
+    return render(request, 'blog/not_allowed.html')
+
+
+@user_passes_test(user_is_member, login_url='not_allowed')
 def createBlog(request):
     if request.user.is_authenticated:
         if request.method == "POST":
@@ -77,7 +103,7 @@ def createBlog(request):
     
 def showBlogs(request):
     query = request.GET.get('q')
-    blogs = Blog.objects.all().order_by("-created_at")
+    blogs = Blog.objects.filter(author=request.user).order_by("-created_at")
 
     if query:
         blogs = blogs.filter(Q(title__icontains=query) | Q(content__icontains=query))
@@ -92,6 +118,7 @@ def blogPage(request, id):
         context = {"Blog": _blog , "Comments": comments} 
         # Render home page with help of context data (the Dynamic content)          
         return render(request, "Blog/blogPage.html", context)
+
 
 def addComment(request, blog_id):
     if request.user.is_authenticated:    
@@ -108,6 +135,8 @@ def addComment(request, blog_id):
     else:
         return redirect("login")      
 
+
+@user_passes_test(user_is_member, login_url='not_allowed')
 def editBlog(request, blog_id):
     if request.user.is_authenticated:
         # Get object from Blog Model by its ID
@@ -132,6 +161,8 @@ def editBlog(request, blog_id):
     else:
         return redirect("login")
 
+
+@user_passes_test(user_is_member, login_url='not_allowed')
 def deleteBlog(request, blog_id):
     post = get_object_or_404(Blog, pk=blog_id)
     if request.method == 'POST':
@@ -144,17 +175,15 @@ def deleteBlog(request, blog_id):
     return render(request, 'blog/post_delete.html', {'post': post})  
     
     
-def publish_blog_post(request):
-    query = request.GET.get('q')
-    show_drafts = request.GET.get('show_drafts')  # Add this line
 
-    # Filter based on the show_drafts parameter
-    if show_drafts:
-        posts = Blog.objects.filter(author=request.user, is_draft=True).order_by('-created_at')
-    else:
-        posts = Blog.objects.filter(author=request.user, is_draft=False).order_by('-created_at')
+
+def publish_blog_post(request):
+    query = request.GET.get('q')  
+
+    # Filter for only published blog posts
+    posts = Blog.objects.filter(publish_status='published').order_by('-created_at')
 
     if query:
-        posts = posts.filter(Q(title__icontains=query) | Q(content__icontains=query))
-    
-    return render(request, 'blog/publish.html', {'posts': posts, 'show_drafts': show_drafts})  # Pass show_drafts to the template
+        posts = posts.filter(title__icontains=query)  # You can add more filters if needed
+
+    return render(request, 'blog/publish.html', {'posts': posts, 'query': query})
