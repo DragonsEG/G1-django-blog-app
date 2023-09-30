@@ -16,7 +16,7 @@
 				<h1>Feed</h1>    
 				<div> 
 					<form method="get" class="search-form">
-						<input type="text" name="q" placeholder="Search" value="{{ query }}">
+						<input type="text" name="q" placeholder="Search posts..." {% if query %}value="{{ query }}"{% endif %}>
 						<button type="submit">Search</button>
 					</form>
 				</div>
