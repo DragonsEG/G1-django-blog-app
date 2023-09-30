@@ -11,6 +11,7 @@
 - **Add Comments**: Engage with readers by adding comments to blog posts.
 - **Publish or Save as Draft**: Flexibly manage post publication.
 - **Bootstrap Styling**: Utilize Bootstrap for an enhanced and responsive user interface.
+- **permission**: permission and page for not_allowed.
 
 
 
