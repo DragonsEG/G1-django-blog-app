@@ -76,7 +76,7 @@ def logoutRequest(request):
     return redirect("login")
 
 def not_allowed(request):
-    return render(request, 'blog/not_allowed.html')
+    return render(request, 'Blog/not_allowed.html')
 
 
 @user_passes_test(user_is_member, login_url='not_allowed')
@@ -103,7 +103,7 @@ def createBlog(request):
     
 def showBlogs(request):
     query = request.GET.get('q')
-    blogs = Blog.objects.filter(author=request.user).order_by("-created_at")
+    blogs = Blog.objects.filter(publish_status="published").order_by("-created_at")
 
     if query:
         blogs = blogs.filter(Q(title__icontains=query) | Q(content__icontains=query))
@@ -172,7 +172,7 @@ def deleteBlog(request, blog_id):
             return redirect("showBlogs")
         else:
             return redirect("login")  
-    return render(request, 'blog/post_delete.html', {'post': post})  
+    return render(request, 'Blog/post_delete.html', {'post': post})  
     
     
 
@@ -186,4 +186,4 @@ def publish_blog_post(request):
     if query:
         posts = posts.filter(title__icontains=query)  # You can add more filters if needed
 
-    return render(request, 'blog/publish.html', {'posts': posts, 'query': query})
+    return render(request, 'Blog/publish.html', {'posts': posts, 'query': query})

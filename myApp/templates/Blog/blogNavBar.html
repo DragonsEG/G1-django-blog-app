@@ -25,20 +25,19 @@
 					<li class="nav-item">
 						<a class="d-flex nav-link" href="/logout">Logout</a>
 					</li>
-          <li class="nav-item">
-            <a class="nav-link"  href="{% url "publish_blog_post" %}">Publish</a>
-          </li>
 					{% else %}
 					<li class="nav-item">
 						<a class="d-flex nav-link" href="/login">Login</a>
 					</li>
 					{% endif %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url "showBlogs" %}">Blogs</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url "createBlog"%}">Create a Blog</a>
-          </li>
+					{% if perms.myApp.add_blog %}
+					<li class="nav-item">
+						<a class="nav-link" href="{% url "showBlogs" %}">My Blogs</a>
+					  </li>
+					  <li class="nav-item">
+						<a class="nav-link" href="{% url "createBlog"%}">Create a Blog</a>
+					  </li>
+					  {% endif %}
 				</ul>
 			</div>
 		</div>

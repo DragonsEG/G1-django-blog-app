@@ -24,7 +24,7 @@ class BlogForm(forms.ModelForm):
     publish_status = forms.ChoiceField(
         label="Publish Status",
         choices=PUBLISH_CHOICES,
-        widget=forms.RadioSelect(attrs={"class": "form-check-input"}),
+        widget=forms.RadioSelect(),
     )
 
     class Meta:
@@ -44,12 +44,3 @@ class NewUserForm(UserCreationForm):
     class Meta:
         model = User
         fields=["username", "password1", "password2"]
-    # super(NewUserForm, self).save(commit=False) line calls the save method of the parent class (UserCreationForm).
-    # This parent class is responsible for handling the form data
-    # And creating a new instance of the User model with the provided data.
-    # def save(self):
-    #     user = super(NewUserForm, self).save(commit=False)
-    #     user.save()
-    #     # Add The User to Group User Called Writer (Has the Writer Permission)
-
-    #     return user
