@@ -1,76 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 	{% load static %} {% load crispy_forms_tags %}
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
-		<link href="{% static 'css/home.css' %}" rel="stylesheet" />
-		<link href="{% static 'css/blogPage.css' %}" rel="stylesheet" />
-		<title>Blog Post</title>
-	</head>
-	<body>
-		{% include "Blog/blogNavBar.html" %}
-		<div class="container-sm container">
-			<div class="header">
-				<h1>{{Blog.title}}</h1> 
-				{% if request.user == Blog.author %}
-				<div class="buttons">
-					<a href="{% url "editBlog" blog_id=Blog.ID %}" class="btn btn-warning" role="button">Edit</a> 
-					<a href="{% url "deleteBlog" blog_id=Blog.ID %}" class="btn btn-danger" role="button">Delete</a> 
-				</div> 
-				{% endif %}
-			</div>
-			<div class="little">
-				<div>Created By: {{ Blog.author.username }}</div>
-				<div>Created At: {{ Blog.created_at }}</div>
-			</div>
-			<hr />
-			<div class="content">
-				<pre class="text-break fs-6" style="white-space: pre-wrap;">{{Blog.content}}</pre>
-			</div>
-		</div>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
+	<link href="{% static 'css/home.css' %}" rel="stylesheet" />
+	<link href="{% static 'css/blogPage.css' %}" rel="stylesheet" />
+    <title>{{ Blog.title }}</title>
+    <style>
+.tag {
+    display: inline-block;
+    padding: 2px 4px; /* Reduce padding for smaller size */
+    margin: 4px;
+    background-color: #e6f7ff; /* Baby blue background color */
+    border-radius: 4px;
+    text-decoration: none; /* Remove underlines from links */
+    color: #007bff; /* Blue text color for links */
+    font-size: 12px; /* Adjust font size to make tags smaller */
+}
 
-		<div class="container-sm commentSection">
-			<form class="row g-3 form" method="POST" action="{% url "addComment" blog_id=Blog.ID %}">
-				{% csrf_token %}
-				<div class="col-auto">
-					<img
-						class="img-icon"
-						src="{% static 'images/Red_Dead_Redemption_II.jpg'%}"
-					/>
-				</div>
-				<div class="col-auto">
-					<input
-						class="form-control"
-						type="text"
-						name="comment"
-						placeholder="Add Your Comment..."
-					/>
-				</div>
-				<div class="col-auto">
-					<button type="submit" class="btn btn-primary mb-3">Post</button>
-				</div>
-				<hr />
-			</form>
-		</div>
+.tag a:hover {
+    background-color: #007bff; /* Blue background color on hover */
+    color: #fff; /* White text color on hover */
+}  
+/* Apply style to the "Created By" and "Created At" items */
+.little {
+    font-style: italic; /* Make text italic */
+    font-size: 11px; /* Adjust font size to make it smaller */
+    display: inline; /* Make the elements inline */ /* Add spacing between the items */
+}
 
-		<div class="container-sm container">
-			<h1>Comments</h1>
-			<hr>
-			{% for comment in Comments %}
-			<div class="container-sm container">
-				<div class="little">
-					<h5>{{ comment.user.username }}</h5>
-					<div>{{ comment.created_at }}</div>
-				</div>
-				<hr />
-				<div class="content">
-					<pre class="text-break fs-6">{{comment.content}}</pre>
-				</div>
-			</div>
-			{% endfor %}
-		</div>
-	</body>
+</style>
+</head>
+<body>
+    {% include "Blog/blogNavBar.html" %}
+
+    <div class="container">
+        <div class="header">
+            <h1>{{ Blog.title }}</h1>
+            {% if request.user == Blog.author %}
+            <div class="buttons">
+                <a href="{% url "editBlog" blog_id=Blog.ID %}" class="btn btn-warning" role="button">Edit</a>
+                <a href="{% url "deleteBlog" blog_id=Blog.ID %}" class="btn btn-danger" role="button">Delete</a>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="author-info">
+            <p class="little">Created By: {{ Blog.author.username }}</p>
+            <p class="little">At {{ Blog.created_at }}</p>
+        </div>
+
+        <div class="tags">
+            {% if Blog.tags.all %}
+            <div class="tag-list">
+                {% for tag in Blog.tags.all %}
+                <a href="{% url "tagposts" tag.pk %}" class="tag">
+                    {{ tag.tag_name }}
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        
+        <hr>
+
+        <div class="content">
+            <p>{{ Blog.content }}</p>
+        </div>
+    </div>
+
+    <div class="container comment-section">
+        <form class="comment-form" method="POST" action="{% url "addComment" blog_id=Blog.ID %}">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-auto">
+                    <img class="img-icon" src="{% static 'images/Red_Dead_Redemption_II.jpg' %}">
+                </div>
+                <div class="col-auto">
+                    <input class="form-control" type="text" name="comment" placeholder="Add Your Comment...">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Post</button>
+                </div>
+            </div>
+            <hr>
+        </form>
+    </div>
+
+    <div class="container comment-container">
+        <h1>Comments</h1>
+        <hr>
+        {% for comment in Comments %}
+        <div class="comment">
+            <div class="comment-header">
+                <h5>{{ comment.user.username }}</h5>
+                <p>{{ comment.created_at }}</p>
+            </div>
+            <hr>
+            <div class="comment-content">
+                <p>{{ comment.content }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
 </html>
