@@ -10,19 +10,23 @@
 		<title>Create Blog</title>
 		<style>
 			/* CSS to style the tags */
+/* CSS to style the tags */
 .tag {
     display: inline-block;
-    padding: 4px 8px;
+    padding: 2px 4px; /* Reduce padding for smaller size */
     margin: 4px;
     background-color: #e6f7ff; /* Baby blue background color */
     border-radius: 4px;
     text-decoration: none; /* Remove underlines from links */
     color: #007bff; /* Blue text color for links */
+    font-size: 12px; /* Adjust font size to make tags smaller */
 }
+
 .tag a:hover {
     background-color: #007bff; /* Blue background color on hover */
     color: #fff; /* White text color on hover */
 }
+
 
 		</style>
 	</head>
@@ -45,13 +49,13 @@
 					<div>Created By: {{ blog.author.username }}</div>
 					<div>Created At: {{ blog.created_at }}</div>
 				</div>
-				
 				{% if blog.tags.all %}
 				<div class="Tags">
-					Tags:
 					{% for tag in blog.tags.all %}
-						<span class="tag">{{ tag.tag_name }}</span>
+					<a href="{% url "tagposts" tag.pk %}" class="tag" >
+						<span >{{ tag.tag_name }}</span>
 					{% endfor %}
+					</a>
 				</div>
 				{% endif %}
 			</div>
