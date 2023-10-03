@@ -52,7 +52,8 @@ class BlogForm(forms.ModelForm):
         queryset=Category.objects.all(),
         widget=forms.CheckboxSelectMultiple,
     )
-      
+    
+
     # The constructor
     def __init__(self, *args, **kwargs):
         # Call the parent class __init__ method
@@ -80,7 +81,7 @@ class EditBlogForm(forms.ModelForm):
         choices=PUBLISH_CHOICES,
         widget=forms.RadioSelect(),
     )
-    tags = forms.CharField(widget=forms.TextInput())
+    tags = forms.CharField(widget=forms.TextInput(), required=False)
     categories = forms.ModelMultipleChoiceField(
         queryset=Category.objects.all(),
         widget=forms.CheckboxSelectMultiple,

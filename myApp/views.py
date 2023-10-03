@@ -47,7 +47,6 @@ def register(request):
     form = NewUserForm()
     return render(request, "Authentication/register.html", context={"form": form})
 
-
 def loginView(request):
 	if request.method == "POST":
         # Get Prepared Django Login Form and fill it with user's data coming from POST request
@@ -79,7 +78,6 @@ def logoutRequest(request):
 def not_allowed(request):
     return render(request, 'Blog/not_allowed.html')
 
-
 @user_passes_test(user_is_member, login_url='not_allowed')
 def createBlog(request):
     if request.user.is_authenticated:
@@ -101,12 +99,10 @@ def createBlog(request):
                 tags_input = form.cleaned_data.get('tags')
                 if tags_input:
                     tags_list = [tag.strip() for tag in tags_input.split(',')]
-                
-                for _tag_name in tags_list:
-                    # temp_default_category = Category.objects.create(name="technology")
-                    tag , created = Tag.objects.get_or_create(tag_name=_tag_name)
-                    blog.tags.add(tag)
-                
+                    for _tag_name in tags_list:
+                        # temp_default_category = Category.objects.get_or_create(name="technology")
+                        tag , created = Tag.objects.get_or_create(tag_name=_tag_name)
+                        blog.tags.add(tag)
                 
                 return redirect("showBlogs")
         else:
@@ -116,7 +112,6 @@ def createBlog(request):
     else:
         return redirect("login")
 
-    
 def showBlogs(request):
     query = request.GET.get('q')
     blogs = Blog.objects.filter(publish_status="published").order_by("-created_at")
@@ -135,7 +130,6 @@ def blogPage(request, id):
         # Render home page with help of context data (the Dynamic content)          
         return render(request, "Blog/blogPage.html", context)
 
-
 def addComment(request, blog_id):
     if request.user.is_authenticated:    
         if request.method == "POST":
@@ -151,7 +145,6 @@ def addComment(request, blog_id):
     else:
         return redirect("login")      
 
-
 @user_passes_test(user_is_member, login_url='not_allowed')
 def editBlog(request, blog_id):
     if request.user.is_authenticated:
@@ -166,12 +159,12 @@ def editBlog(request, blog_id):
                 
                 if tags_input:
                     tags_list = [tag.strip() for tag in tags_input.split(',')]
-                form.instance.tags.clear()
-                for _tag_name in tags_list:
+                    form.instance.tags.clear()
+                    for _tag_name in tags_list:
                     
-                    temp_default_category ,created = Category.objects.get_or_create(name="technology")
-                    tag , created = Tag.objects.get_or_create(category=temp_default_category,tag_name=_tag_name)
-                    form.instance.tags.add(tag)
+                        temp_default_category ,created = Category.objects.get_or_create(name="technology")
+                        tag , created = Tag.objects.get_or_create(category=temp_default_category,tag_name=_tag_name)
+                        form.instance.tags.add(tag)
                     
                 categories = form.cleaned_data.get('categories')
                 form.instance.categories.set(categories)
@@ -187,7 +180,6 @@ def editBlog(request, blog_id):
         return render(request, "Blog/edit.html", context)  
     else:
         return redirect("login")
-
 
 @user_passes_test(user_is_member, login_url='not_allowed')
 def deleteBlog(request, blog_id):
@@ -215,13 +207,17 @@ def myBlogPage(request):
     posts = Blog.objects.filter(author=author)
     if query: 
         posts = posts.filter(Q(title__icontains=query)|Q(content__icontains=query))
-    
     return render (request, 'Blog/myblogpage.html', {'Blogs':posts,'query':query})
 
 def tagposts(request,id):
     tag = Tag.objects.get(pk=id)
     posts = tag.tag_posts.all()
-    return render(request, 'Blog/tagposts.html', {'Blogs':posts,'tag':tag.tag_name})
+    query = request.GET.get('q')
+    if query: 
+        posts = posts.filter(Q(title__icontains=query)|Q(content__icontains=query))
+    return render(request, 'Blog/tagposts.html', {'Blogs':posts,'tag':tag.tag_name, "query":query})
+    # return render(request, 'Blog/tagposts.html', {'Blogs':posts,'tag':tag.tag_name})
+
 
 
 
@@ -279,3 +275,7 @@ def category_post_list(request, category_id):
     return render(request, 'category/post_category.html', {'category': category, 'posts': posts})
 
 
+    query = request.GET.get('q')
+    if query: 
+        posts = posts.filter(Q(title__icontains=query)|Q(content__icontains=query))
+    return render(request, 'Blog/tagposts.html', {'Blogs':posts,'tag':tag.tag_name, "query":query})
