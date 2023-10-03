@@ -1,14 +1,18 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
-from .models import Blog, Category, Tag, comment
+from .models import Blog, Comment
+from .forms import NewUserForm,BlogForm
+from .models import Blog, Category, Tag
 from .forms import EditBlogForm, NewUserForm,BlogForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm 
 from django.contrib.auth.decorators import login_required,permission_required
 from django.http import HttpResponse
 from django.db.models import Q
-from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib import messages
+from .forms import NewUserForm
+from django.contrib.auth.models import Group  # Import the Group model at the top of your views.py
 
 def user_is_member(user):
     return user.is_superuser or user.groups.filter(name='Member').exists()
@@ -16,13 +20,8 @@ def user_is_member(user):
 def user_is_viewer(user):
     return user.is_superuser or user.groups.filter(name='Viewer').exists()
 
-
-from django.contrib.auth.models import Group
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from .forms import NewUserForm
-from django.contrib.auth.models import Group  # Import the Group model at the top of your views.py
-
+def index(request):
+    return redirect("showBlogs")
 
 def register(request):
     if request.method == "POST":
@@ -124,7 +123,7 @@ def showBlogs(request):
 def blogPage(request, id):
         # Get object from Blog Model by its ID
         _blog = Blog.objects.get(ID=id)
-        comments = comment.objects.filter(blog=_blog).order_by("-created_at")
+        comments = Comment.objects.filter(blog=_blog).order_by("-created_at")
         context = {"Blog": _blog , "Comments": comments} 
         # Render home page with help of context data (the Dynamic content)          
         return render(request, "Blog/blogPage.html", context)
@@ -134,7 +133,7 @@ def addComment(request, blog_id):
     if request.user.is_authenticated:    
         if request.method == "POST":
             # Assign the form data to new post object to save it into DB
-            _comment = comment(
+            _comment = Comment(
                 content = request.POST.get('comment'),
                 user = request.user,
                 blog = Blog.objects.get(ID=blog_id)
@@ -190,25 +189,18 @@ def deleteBlog(request, blog_id):
             return redirect("login")  
     return render(request, 'Blog/post_delete.html', {'post': post})  
     
-    
-
-
 def publish_blog_post(request):
     query = request.GET.get('q')  
-
     # Filter for only published blog posts
     posts = Blog.objects.filter(publish_status='published').order_by('-created_at')
-
     if query:
         posts = posts.filter(title__icontains=query)  # You can add more filters if needed
-
     return render(request, 'Blog/publish.html', {'posts': posts, 'query': query})
 
-def myblogpage(request):
+def myBlogPage(request):
     query = request.GET.get('q')
     author = request.user
     posts = Blog.objects.filter(author=author)
-    
     if query: 
         posts = posts.filter(Q(title__icontains=query)|Q(content__icontains=query))
     
