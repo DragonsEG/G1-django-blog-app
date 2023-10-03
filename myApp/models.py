@@ -16,10 +16,7 @@ class Blog(models.Model):
   is_draft = models.BooleanField(default=True)
   publish_status = models.CharField(max_length=10, choices=[('draft', 'Draft'), ('published', 'Published')], default='draft')
 
-  
-  
-
-class comment(models.Model):
+class Comment(models.Model):
   ID = models.BigAutoField(auto_created = True, primary_key=True, verbose_name="ID")
   content = models.TextField()
   user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False)
