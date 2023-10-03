@@ -32,7 +32,7 @@ class Blog(models.Model):
   def __str__(self):
       return self.title
 
-class comment(models.Model):
+class Comment(models.Model):
   ID = models.BigAutoField(auto_created = True, primary_key=True, verbose_name="ID")
   content = models.TextField()
   user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False)
