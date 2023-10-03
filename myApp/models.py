@@ -7,10 +7,11 @@ class UserProfile(models.Model):
     groups = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
 
 class Category(models.Model):
-    name = models.CharField(max_length=150) 
-    
+    name = models.CharField(max_length=100)
     def __str__(self):
-      return self.name
+        return self.name
+      
+      
 class Tag(models.Model):
   category  = models.ForeignKey(Category,on_delete=models.CASCADE,related_name='tags')
   tag_name  = models.CharField(max_length=100)
@@ -28,6 +29,7 @@ class Blog(models.Model):
   is_draft = models.BooleanField(default=True)
   publish_status = models.CharField(max_length=10, choices=[('draft', 'Draft'), ('published', 'Published')], default='draft')
   tags = models.ManyToManyField(Tag,related_name="tag_posts")
+  categories = models.ManyToManyField(Category)
   
   def __str__(self):
       return self.title

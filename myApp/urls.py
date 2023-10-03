@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import category_list, category_post_list,category_list1
 
 urlpatterns = [
   path("register/", views.register, name="register"),
@@ -16,4 +17,11 @@ urlpatterns = [
   path('not_allowed/', views.not_allowed, name='not_allowed'),
   path('myblog/',views.myBlogPage,name='myblogpage'),
   path('tagposts/<int:id>', views.tagposts, name='tagposts'),
+  # --------------------------------------
+    path('blog/categories/', category_list, name='category_list'),
+    path('blog/category/', category_list1, name='category_list1'),
+    path('blog/categories/<int:category_id>/', category_post_list, name='category_post_list'),
+    path('blog/create_category/', views.Category_create, name='category_create'),
+    path('blog/edit_category/<int:category_id>/', views.category_edit, name='category_edit'),
+    path('blog/delete_category/<int:category_id>/', views.category_delete, name='category_delete'),
 ]

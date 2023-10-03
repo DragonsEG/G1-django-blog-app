@@ -32,13 +32,16 @@
 					{% endif %}
 					<li class="nav-item">
             <a class="nav-link" href="{% url "showBlogs" %}">Blogs</a>
-          </li>
+          	</li>
 					{% if perms.myApp.add_blog %}
 					<li class="nav-item">
 						<a class="nav-link" href="{% url "myblogpage" %}">My Blogs</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="{% url "createBlog"%}">Create a Blog</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{% url "category_list"%}"> Categories</a>
 					</li>
 					{% endif %}
 				</ul>

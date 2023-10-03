@@ -1,0 +1,22 @@
+
+<div class="container">
+    <a href="{% url 'category_list1' %}">Category</a>
+
+    <h2>Categories</h2>
+    <a href="{% url 'category_create'%}" class="btn btn-danger btn-sm float-right">Create</a>
+    <ul class="list-group">
+        <h1> categories with posts </h1>
+        {% for category in categories %}
+        {% comment %} <li class="list-group-item"> {% endcomment %}
+            {% comment %} <a href="{% url 'category_edit' category.id %}" class="btn btn-warning btn-sm float-right ml-2">Edit</a>
+            <a href="{% url 'category_delete' category.id %}" class="btn btn-danger btn-sm float-right">Delete</a> {% endcomment %}
+            {% comment %} <strong>{{ category.name }}</strong> {% endcomment %}
+            <li><a href="{% url 'category_post_list' category.id %}">{{ category.name }}</a></li>
+        {% comment %} </li> {% endcomment %}
+        {% empty %}
+        <li class="list-group-item">No categories found.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'showBlogs'%}" class="btn btn-secondary">Cancel</a>
+</div>
+

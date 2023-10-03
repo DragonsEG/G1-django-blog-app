@@ -7,12 +7,14 @@ from .forms import EditBlogForm, NewUserForm,BlogForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm 
 from django.contrib.auth.decorators import login_required,permission_required
-from django.http import HttpResponse
 from django.db.models import Q
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from .forms import NewUserForm
 from django.contrib.auth.models import Group  # Import the Group model at the top of your views.py
+from .models import Category
+from .forms import CategoryForm
+
 
 def user_is_member(user):
     return user.is_superuser or user.groups.filter(name='Member').exists()
@@ -90,14 +92,19 @@ def createBlog(request):
                 is_draft = publish_status == 'draft'
                 blog.is_draft = is_draft
                 blog.save()
+                # Check if a category has been selected
+                selected_categories = form.cleaned_data.get('categories')
+                for selected_category in selected_categories:
+                    blog.categories.add(selected_category)
+                    
                 ## Tagging the post
                 tags_input = form.cleaned_data.get('tags')
                 if tags_input:
                     tags_list = [tag.strip() for tag in tags_input.split(',')]
                 
                 for _tag_name in tags_list:
-                    temp_default_category = Category.objects.create(name="technology")
-                    tag , created = Tag.objects.get_or_create(category=temp_default_category,tag_name=_tag_name)
+                    # temp_default_category = Category.objects.create(name="technology")
+                    tag , created = Tag.objects.get_or_create(tag_name=_tag_name)
                     blog.tags.add(tag)
                 
                 
@@ -156,6 +163,7 @@ def editBlog(request, blog_id):
             # Check that form has no common errors
             if form.is_valid():
                 tags_input = form.cleaned_data.get('tags')
+                
                 if tags_input:
                     tags_list = [tag.strip() for tag in tags_input.split(',')]
                 form.instance.tags.clear()
@@ -164,11 +172,15 @@ def editBlog(request, blog_id):
                     temp_default_category ,created = Category.objects.get_or_create(name="technology")
                     tag , created = Tag.objects.get_or_create(category=temp_default_category,tag_name=_tag_name)
                     form.instance.tags.add(tag)
+                    
+                categories = form.cleaned_data.get('categories')
+                form.instance.categories.set(categories)
                 form.save()
                 return redirect("blogPage", id=blog_id)
         else:
             # Get Django Blog Form Created in forms.py and apply old values to its fields
-            form = EditBlogForm(instance = blog)
+            initial_data = {'category': blog.categories.first()}  # Pre-select the current category
+            form = EditBlogForm(instance=blog, initial=initial_data)
             
         context = {"form": form}
         # Render home page with help of context data (the Dynamic content)        
@@ -210,3 +222,60 @@ def tagposts(request,id):
     tag = Tag.objects.get(pk=id)
     posts = tag.tag_posts.all()
     return render(request, 'Blog/tagposts.html', {'Blogs':posts,'tag':tag.tag_name})
+
+
+
+@login_required
+def category_list(request):
+    categories = Category.objects.all()
+    return render(request, 'category/category_list.html', {'categories': categories})
+
+@login_required
+def category_list1(request):
+    categories = Category.objects.all()
+    return render(request, 'category/category.html', {'categories': categories})
+
+@login_required
+def Category_create(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            category = form.save()
+            messages.success(request, 'Your category was successfully created!')
+            return redirect('category_list')
+    else:
+        form = CategoryForm()
+        return render(request ,'category/category_create.html', {'form': form} )
+        
+        
+@login_required
+def category_edit(request, category_id):
+    category = get_object_or_404(Category, pk=category_id)
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Category updated successfully.')
+            return redirect('category_list')
+    else:
+        form = CategoryForm(instance=category)
+    return render(request, 'category/category_edit.html', {'form': form, 'category': category})
+
+
+@login_required
+def category_delete(request, category_id):
+    category = get_object_or_404(Category, pk=category_id)
+    if request.method == 'POST':
+        category.delete()
+        messages.success(request, 'Category deleted successfully.')
+        return redirect('category_list')
+    return render(request, 'category/category_delete.html', {'category': category})
+
+
+@login_required
+def category_post_list(request, category_id):
+    category = get_object_or_404(Category, pk=category_id)
+    posts = Blog.objects.filter(categories=category, publish_status='published')
+    return render(request, 'category/post_category.html', {'category': category, 'posts': posts})
+
+
