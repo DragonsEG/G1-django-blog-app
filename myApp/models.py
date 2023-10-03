@@ -7,11 +7,16 @@ class UserProfile(models.Model):
     groups = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
 
 class Category(models.Model):
-    pass 
-  
-class Tag():
-  category  = models.ForeignKey(Category,related_name='tags')
+    name = models.CharField(max_length=150) 
+    
+    def __str__(self):
+      return self.name
+class Tag(models.Model):
+  category  = models.ForeignKey(Category,on_delete=models.CASCADE,related_name='tags')
   tag_name  = models.CharField(max_length=100)
+  
+  def __str__(self):
+    return self.tag_name
   
 class Blog(models.Model):
   ID = models.BigAutoField(auto_created = True, primary_key=True, verbose_name="ID")

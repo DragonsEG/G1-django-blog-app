@@ -21,20 +21,27 @@
 					</form>
 				</div>
 			</div>
-			{% for blog in Blogs%}
+			{% for blog in Blogs %}
 			<div class="container-sm container">
 				<h2><a href="{% url "blogPage" id=blog.ID %}">{{ blog.title }}</a></h2>
 				<div class="little">
 					<div>Created By: {{ blog.author.username }}</div>
-					<div>Created At: {{blog.created_at}}</div>
+					<div>Created At: {{ blog.created_at }}</div>
 				</div>
+				
+				{% if blog.tags.all %}
+				<div class="Tags">
+					Tags:
+					{% for tag in blog.tags.all %}
+						<span class="tag">{{ tag.tag_name }}</span>
+					{% endfor %}
+				</div>
+				{% endif %}
 			</div>
-      {% if perms.myApp.add_blog %}
+			{% if perms.myApp.add_blog %}
 				<a href="{% url "createBlog" %}" class="create-post-btn">Create a Post</a>
-      {% endif %}
+			{% endif %}
 			{% endfor %}
 		</div>
 	</body>
 </html>
-
-
