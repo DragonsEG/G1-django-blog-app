@@ -1,76 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
-	{% load static %} {% load crispy_forms_tags %}
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
-		<link href="{% static 'css/home.css' %}" rel="stylesheet" />
-		<link href="{% static 'css/blogPage.css' %}" rel="stylesheet" />
-		<title>Blog Post</title>
-	</head>
-	<body>
-		{% include "Blog/blogNavBar.html" %}
-		<div class="container-sm container">
-			<div class="header">
-				<h1>{{Blog.title}}</h1> 
-				{% if request.user == Blog.author %}
-				<div class="buttons">
-					<a href="{% url "editBlog" blog_id=Blog.ID %}" class="btn btn-warning" role="button">Edit</a> 
-					<a href="{% url "deleteBlog" blog_id=Blog.ID %}" class="btn btn-danger" role="button">Delete</a> 
-				</div> 
-				{% endif %}
-			</div>
-			<div class="little">
-				<div>Created By: {{ Blog.author.username }}</div>
-				<div>Created At: {{ Blog.created_at }}</div>
-			</div>
-			<hr />
-			<div class="content">
-				<pre class="text-break fs-6" style="white-space: pre-wrap;">{{Blog.content}}</pre>
-			</div>
-		</div>
+{% load static %} {% load crispy_forms_tags %}
 
-		<div class="container-sm commentSection">
-			<form class="row g-3 form" method="POST" action="{% url "addComment" blog_id=Blog.ID %}">
-				{% csrf_token %}
-				<div class="col-auto">
-					<img
-						class="img-icon"
-						src="{% static 'images/Red_Dead_Redemption_II.jpg'%}"
-					/>
-				</div>
-				<div class="col-auto">
-					<input
-						class="form-control"
-						type="text"
-						name="comment"
-						placeholder="Add Your Comment..."
-					/>
-				</div>
-				<div class="col-auto">
-					<button type="submit" class="btn btn-primary mb-3">Post</button>
-				</div>
-				<hr />
-			</form>
-		</div>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/home.css' %}" rel="stylesheet">
+    <title>{{ Blog.title }}</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+        }
 
-		<div class="container-sm container">
-			<h1>Comments</h1>
-			<hr>
-			{% for comment in Comments %}
-			<div class="container-sm container">
-				<div class="little">
-					<h5>{{ comment.user.username }}</h5>
-					<div>{{ comment.created_at }}</div>
-				</div>
-				<hr />
-				<div class="content">
-					<pre class="text-break fs-6">{{comment.content}}</pre>
-				</div>
-			</div>
-			{% endfor %}
-		</div>
-	</body>
+        .container {
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        /* Blog Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .edit-delete-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .edit-delete-buttons a {
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-align: center;
+            color: #fff;
+        }
+
+        .edit-button {
+            background-color: #ffc107; /* Yellow */
+        }
+
+        .delete-button {
+            background-color: #dc3545; /* Red */
+        }
+
+        /* Blog Meta Info Styles */
+        .author-info {
+            font-size: 11px;
+            color: #777;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        /* Blog Tags Styles */
+        .tags {
+            margin-top: 10px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 8px;
+            margin-right: 8px;
+            background-color: #e6f7ff;
+            color: #007bff;
+            border-radius: 4px;
+            font-size: 11px;
+            text-decoration: none;
+            font-weight: bold; /* Bold tags */
+        }
+
+        .tag:hover {
+            background-color: #0056b3;
+            color: #e6f7ff;
+        }
+
+        /* Blog Content Styles */
+        .content {
+            margin-top: 20px;
+        }
+
+        /* Comment Section Styles */
+        .comment-section {
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+
+        .comment-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .img-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .comment-form input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .comment-form button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Comment Container Styles */
+        .comment-container {
+            margin-top: 20px;
+        }
+
+        .comment {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .comment-header h5 {
+            margin: 0;
+        }
+
+        .comment-content {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    {% include "Blog/blogNavBar.html" %}
+    <div class="container">
+        <div class="header">
+            <h1>{{ Blog.title }}</h1>
+            {% if request.user == Blog.author %}
+            <div class="edit-delete-buttons">
+                <a href="{% url "editBlog" blog_id=Blog.ID %}" class="edit-button">Edit</a>
+                <a href="{% url "deleteBlog" blog_id=Blog.ID %}" class="delete-button">Delete</a>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="author-info">
+            Created By: {{ Blog.author.username }} | At {{ Blog.created_at }}
+        </div>
+
+        <div class="tags">
+            {% if Blog.tags.all %}
+            {% for tag in Blog.tags.all %}
+            <a href="{% url "tagposts" tag.pk %}" class="tag">{{ tag.tag_name }}</a>
+            {% endfor %}
+            {% endif %}
+        </div>
+        
+        <hr>
+
+        <div class="content">
+            <p>{{ Blog.content }}</p>
+        </div>
+    </div>
+
+    <div class="container comment-section">
+        <form class="comment-form" method="POST" action="{% url "addComment" blog_id=Blog.ID %}">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-auto">
+                    <img class="img-icon" src="{% static 'images/Red_Dead_Redemption_II.jpg' %}">
+                </div>
+                <div class="col-auto">
+                    <input class="form-control" type="text" name="comment" placeholder="Add Your Comment...">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Post</button>
+                </div>
+            </div>
+            <hr>
+        </form>
+    </div>
+
+    <div class="container comment-container">
+        <h1>Comments</h1>
+        <hr>
+        {% for comment in Comments %}
+        <div class="comment">
+            <div class="comment-header">
+                <h5>{{ comment.user.username }}</h5>
+                <p>{{ comment.created_at }}</p>
+            </div>
+            <hr>
+            <div class="comment-content">
+                <p>{{ comment.content }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
 </html>
