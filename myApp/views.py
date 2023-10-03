@@ -96,7 +96,7 @@ def createBlog(request):
                     tags_list = [tag.strip() for tag in tags_input.split(',')]
                 
                 for _tag_name in tags_list:
-                    temp_default_category = Category.objects.create(name="technology")
+                    temp_default_category = Category.objects.get_or_createcreate(name="technology")
                     tag , created = Tag.objects.get_or_create(category=temp_default_category,tag_name=_tag_name)
                     blog.tags.add(tag)
                 
@@ -204,10 +204,9 @@ def myBlogPage(request):
     if query: 
         posts = posts.filter(Q(title__icontains=query)|Q(content__icontains=query))
     
-    return render (request, 'Blog/myblogpage.html', {'userposts':posts,'query':query})
+    return render (request, 'Blog/myblogpage.html', {'Blogs':posts,'query':query})
 
 def tagposts(request,id):
-    
     tag = Tag.objects.get(pk=id)
     posts = tag.tag_posts.all()
     return render(request, 'Blog/tagposts.html', {'Blogs':posts,'tag':tag.tag_name})
