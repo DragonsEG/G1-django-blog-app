@@ -189,9 +189,11 @@ def publish_blog_post(request):
     return render(request, 'Blog/publish.html', {'posts': posts, 'query': query})
 
 def myblogpage(request):
-    
+    query = request.GET.get('q')
     author = request.user
     posts = Blog.objects.filter(author=author)
     
+    if query: 
+        posts = posts.filter(Q(title__icontains=query)|Q(content__icontains=query))
     
-    return render (request, 'Blog/myblogpage.html', {'userposts':posts})
+    return render (request, 'Blog/myblogpage.html', {'userposts':posts,'query':query})
