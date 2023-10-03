@@ -8,6 +8,23 @@
 		<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
 		<link href="{% static 'css/home.css' %}" rel="stylesheet" />
 		<title>Create Blog</title>
+		<style>
+			/* CSS to style the tags */
+.tag {
+    display: inline-block;
+    padding: 4px 8px;
+    margin: 4px;
+    background-color: #e6f7ff; /* Baby blue background color */
+    border-radius: 4px;
+    text-decoration: none; /* Remove underlines from links */
+    color: #007bff; /* Blue text color for links */
+}
+.tag a:hover {
+    background-color: #007bff; /* Blue background color on hover */
+    color: #fff; /* White text color on hover */
+}
+
+		</style>
 	</head>
 	<body>
 		{% include "Blog/blogNavBar.html" %}
