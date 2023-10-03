@@ -97,7 +97,7 @@ def createBlog(request):
                     tags_list = [tag.strip() for tag in tags_input.split(',')]
                 
                 for _tag_name in tags_list:
-                    temp_default_category = Category.objects.get_or_createcreate(name="technology")
+                    temp_default_category = Category.objects.get_or_create(name="technology")
                     tag , created = Tag.objects.get_or_create(category=temp_default_category,tag_name=_tag_name)
                     blog.tags.add(tag)
                 
