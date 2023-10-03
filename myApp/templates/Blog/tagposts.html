@@ -34,11 +34,11 @@
 		{% include "Blog/blogNavBar.html" %}
 		<div class="container-md">
 			<div class="feed-search">
-				<h1>Feed</h1>    
+				<span>Filter: {{tag}}</span>  
 				<div> 
-					<form class="d-flex" role="search" method="get" class="search-form">
-						<input class="form-control me-2" aria-label="Search" type="search" name="q" placeholder="Search posts..." {% if query %}value="{{ query }}"{% endif %}>
-						<button class="btn btn-primary" type="submit">Search</button>
+					<form method="get" class="search-form">
+						<input type="text" name="q" placeholder="Search posts..." {% if query %}value="{{ query }}"{% endif %}>
+						<button type="submit">Search</button>
 					</form>
 				</div>
 			</div>
