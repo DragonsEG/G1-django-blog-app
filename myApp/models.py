@@ -26,3 +26,11 @@ class comment(models.Model):
   blog = models.ForeignKey(Blog, on_delete=models.CASCADE, blank=False)
   created_at = models.DateTimeField(auto_now_add=True, blank=True)
   updated_at = models.DateTimeField(auto_now=True)  
+  
+class Category(models.Model):
+    pass 
+  
+class Tags():
+  category  = models.ForeignKey(Category,related_name='tags')
+  tag_name  = models.CharField(max_length=100)
+  
