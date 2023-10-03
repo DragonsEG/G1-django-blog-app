@@ -275,7 +275,7 @@ def category_post_list(request, category_id):
     return render(request, 'category/post_category.html', {'category': category, 'posts': posts})
 
 
-    query = request.GET.get('q')
-    if query: 
-        posts = posts.filter(Q(title__icontains=query)|Q(content__icontains=query))
-    return render(request, 'Blog/tagposts.html', {'Blogs':posts,'tag':tag.tag_name, "query":query})
+    # query = request.GET.get('q')
+    # if query: 
+    #     posts = posts.filter(Q(title__icontains=query)|Q(content__icontains=query))
+    # return render(request, 'Blog/tagposts.html', {'Blogs':posts,'tag':tag.tag_name, "query":query})
