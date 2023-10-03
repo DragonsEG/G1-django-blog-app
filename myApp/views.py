@@ -204,7 +204,7 @@ def myBlogPage(request):
     if query: 
         posts = posts.filter(Q(title__icontains=query)|Q(content__icontains=query))
     
-    return render (request, 'Blog/myblogpage.html', {'userposts':posts,'query':query})
+    return render (request, 'Blog/myblogpage.html', {'Blogs':posts,'query':query})
 
 def tagposts(request,id):
     
