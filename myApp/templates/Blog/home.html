@@ -148,7 +148,7 @@
         <div class="blog-card">
             <h2><a href="{% url "blogPage" id=blog.ID %}" style="color: #007bff;">{{ blog.title }}</a></h2>
             <div class="meta-info">
-                <p class="meta-info">Created By {{ blog.author.username }} At {{ blog.created_at }}</p>
+                <p class="meta-info">Created By {{ blog.author.username }} | At {{ blog.created_at }}</p>
             </div>
             <div class="tags">
                 {% if blog.tags.all %}
