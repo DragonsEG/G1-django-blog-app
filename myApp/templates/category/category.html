@@ -1,0 +1,11 @@
+<ul class="list-group">
+    {% for category in categories %}
+    <li class="list-group-item">
+        <a href="{% url 'category_edit' category.id %}" class="btn btn-warning btn-sm float-right ml-2">Edit</a>
+        <a href="{% url 'category_delete' category.id %}" class="btn btn-danger btn-sm float-right">Delete</a>
+        <strong>{{ category.name }}</strong>
+    </li>
+    {% empty %}
+    <li class="list-group-item">No categories found.</li>
+    {% endfor %}
+</ul>
