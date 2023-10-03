@@ -187,3 +187,11 @@ def publish_blog_post(request):
         posts = posts.filter(title__icontains=query)  # You can add more filters if needed
 
     return render(request, 'Blog/publish.html', {'posts': posts, 'query': query})
+
+def myblogpage(request):
+    
+    author = request.user
+    posts = Blog.objects.filter(author=author)
+    
+    
+    return render (request, 'Blog/myblogpage.html', {'userposts':posts})

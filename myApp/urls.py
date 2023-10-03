@@ -13,4 +13,5 @@ urlpatterns = [
   path("blog/delete/id/<int:blog_id>", views.deleteBlog, name="deleteBlog"),
   path('publish/', views.publish_blog_post, name='publish_blog_post'),
   path('not_allowed/', views.not_allowed, name='not_allowed'),
+  path('myblog/',views.myblogpage,name='myblogpage'),
 ]
