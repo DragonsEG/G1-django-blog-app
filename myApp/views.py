@@ -218,4 +218,4 @@ def tagposts(request,id):
     
     tag = Tag.objects.get(pk=id)
     posts = tag.tag_posts.all()
-    return render(request, 'Blog/tagposts.html', {'posts':posts})
+    return render(request, 'Blog/tagposts.html', {'Blogs':posts,'tag':tag.tag_name})

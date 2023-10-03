@@ -29,7 +29,8 @@ class Blog(models.Model):
   publish_status = models.CharField(max_length=10, choices=[('draft', 'Draft'), ('published', 'Published')], default='draft')
   tags = models.ManyToManyField(Tag,related_name="tag_posts")
   
-  
+  def __str__(self):
+      return self.title
 
 class comment(models.Model):
   ID = models.BigAutoField(auto_created = True, primary_key=True, verbose_name="ID")
