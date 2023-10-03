@@ -26,6 +26,11 @@
     background-color: #007bff; /* Blue background color on hover */
     color: #fff; /* White text color on hover */
 }
+.little {
+    font-style: italic; /* Make text italic */
+    font-size: 11px; /* Adjust font size to make it smaller */
+    display: inline; /* Make the elements inline */ /* Add spacing between the items */
+}
 
 
 		</style>
@@ -45,9 +50,9 @@
 			{% for blog in Blogs %}
 			<div class="container-sm container">
 				<h2><a href="{% url "blogPage" id=blog.ID %}">{{ blog.title }}</a></h2>
-				<div class="little">
-					<div>Created By: {{ blog.author.username }}</div>
-					<div>Created At: {{ blog.created_at }}</div>
+				<div class="author-info">
+					<p class="little">Created By: {{ blog.author.username }}</p>
+					<p class="little">At {{ blog.created_at }}</p>
 				</div>
 				{% if blog.tags.all %}
 				<div class="Tags">
