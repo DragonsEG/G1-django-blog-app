@@ -1,73 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
-	{% load static %} {% load crispy_forms_tags %}
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
-		<link href="{% static 'css/home.css' %}" rel="stylesheet" />
-		<title>Create Blog</title>
-		<style>
-			/* CSS to style the tags */
-/* CSS to style the tags */
-.tag {
-    display: inline-block;
-    padding: 2px 4px; /* Reduce padding for smaller size */
-    margin: 4px;
-    background-color: #e6f7ff; /* Baby blue background color */
-    border-radius: 4px;
-    text-decoration: none; /* Remove underlines from links */
-    color: #007bff; /* Blue text color for links */
-    font-size: 12px; /* Adjust font size to make tags smaller */
-}
+{% load static %} {% load crispy_forms_tags %}
 
-.tag a:hover {
-    background-color: #007bff; /* Blue background color on hover */
-    color: #fff; /* White text color on hover */
-}
-.little {
-    font-style: italic; /* Make text italic */
-    font-size: 11px; /* Adjust font size to make it smaller */
-    display: inline; /* Make the elements inline */ /* Add spacing between the items */
-}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/home.css' %}" rel="stylesheet">
+    <title>Feed</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        .container {
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        /* Blog Card Styles */
+        .blog-card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .blog-card h2 {
+            font-size: 20px;
+            margin: 0;
+            color: #333;
+        }
+
+        .blog-card .meta-info {
+            font-size: 11px;
+            color: #777;
+            margin-top: 10px;
+            font-style: italic; /* Italic style */
+        }
+
+        .blog-card .tags {
+            margin-top: 10px;
+        }
+
+        .blog-card .tag {
+            display: inline-block;
+            padding: 4px 8px;
+            margin-right: 8px;
+            background-color: #e6f7ff;
+            color: #007bff;
+            border-radius: 4px;
+            font-size: 11px;
+            text-decoration: none;
+            font-weight: bold; /* Bold tags */
+        }
+
+        .blog-card .tag:hover {
+            background-color: #0056b3;
+			color: #e6f7ff;
+        }
+
+        /* Search Form Styles */
+		.search-form {
+		float: right; /* Align to the right */
+		
+		clear: both; /* Clear the float */
+		}
 
 
-		</style>
-	</head>
-	<body>
-		{% include "Blog/blogNavBar.html" %}
-		<div class="container-md">
-			<div class="feed-search">
-				<h1>Feed</h1>    
-				<div> 
-					<form method="get" class="search-form">
-						<input type="text" name="q" placeholder="Search posts..." {% if query %}value="{{ query }}"{% endif %}>
-						<button type="submit">Search</button>
-					</form>
-				</div>
-			</div>
-			{% for blog in Blogs %}
-			<div class="container-sm container">
-				<h2><a href="{% url "blogPage" id=blog.ID %}">{{ blog.title }}</a></h2>
-				<div class="author-info">
-					<p class="little">Created By: {{ blog.author.username }}</p>
-					<p class="little">At {{ blog.created_at }}</p>
-				</div>
-				{% if blog.tags.all %}
-				<div class="Tags">
-					{% for tag in blog.tags.all %}
-					<a href="{% url "tagposts" tag.pk %}" class="tag" >
-						<span >{{ tag.tag_name }}</span>
-					{% endfor %}
-					</a>
-				</div>
-				{% endif %}
-			</div>
-			{% if perms.myApp.add_blog %}
-				<a href="{% url "createBlog" %}" class="create-post-btn">Create a Post</a>
-			{% endif %}
-			{% endfor %}
+        .search-form input[type="text"] {
+            width: 200px;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+			margin-bottom: 20px;
+        }
+
+        .search-form button {
+            padding: 6px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Create Post Button Styles */
+        .create-post-btn {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .create-post-btn:hover {
+            background-color: #0056b3;
+        }
+
+			.header-search {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	/* Style the header separately if needed */
+	.header-search h1 {
+		margin: 0; /* Remove margin from h1 */
+	}
+
+	/* Style the search form separately if needed */
+	.header-search .search-form {
+		margin-left: 20px; /* Add some margin to separate from the header */
+	}
+    </style>
+</head>
+<body>
+    {% include "Blog/blogNavBar.html" %}
+    <div class="container">
+        <div class="header-search">
+			<h1>Feed</h1>
+			<form method="get" class="search-form">
+				<input type="text" name="q" placeholder="Search posts..." {% if query %}value="{{ query }}"{% endif %}>
+				<button type="submit">Search</button>
+			</form>
 		</div>
-	</body>
+        {% for blog in Blogs %}
+        <div class="blog-card">
+            <h2><a href="{% url "blogPage" id=blog.ID %}" style="color: #007bff;">{{ blog.title }}</a></h2>
+            <div class="meta-info">
+                <p class="meta-info">Created By {{ blog.author.username }} At {{ blog.created_at }}</p>
+            </div>
+            <div class="tags">
+                {% if blog.tags.all %}
+                {% for tag in blog.tags.all %}
+                <a href="{% url "tagposts" tag.pk %}" class="tag">{{ tag.tag_name }}</a>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% if perms.myApp.add_blog %}
+        <a href="{% url "createBlog" %}" class="create-post-btn">Create a Post</a>
+        {% endif %}
+    </div>
+</body>
 </html>
