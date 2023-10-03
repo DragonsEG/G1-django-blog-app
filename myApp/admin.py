@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib import admin
-from .models import Blog
+from .models import Blog, Category, Tag
 
 ## To Show automatically handled fields in admin site
 # Automatic handled fields like auto_now and auto_now_add
@@ -14,6 +14,8 @@ class BlogAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at", "updated_at")
     
 admin.site.register(Blog, BlogAdmin)
+admin.site.register(Tag)
+admin.site.register(Category)
 
 #ahmed
 #ahmed@gmail.com

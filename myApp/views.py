@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
-from .models import Blog, comment
-from .forms import NewUserForm,BlogForm
+from .models import Blog, Category, Tag, comment
+from .forms import EditBlogForm, NewUserForm,BlogForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm 
 from django.contrib.auth.decorators import login_required,permission_required
@@ -91,6 +91,16 @@ def createBlog(request):
                 is_draft = publish_status == 'draft'
                 blog.is_draft = is_draft
                 blog.save()
+                ## Tagging the post
+                tags_input = form.cleaned_data.get('tags')
+                if tags_input:
+                    tags_list = [tag.strip() for tag in tags_input.split(',')]
+                
+                for _tag_name in tags_list:
+                    temp_default_category = Category.objects.create(name="technology")
+                    tag , created = Tag.objects.get_or_create(category=temp_default_category,tag_name=_tag_name)
+                    blog.tags.add(tag)
+                
                 
                 return redirect("showBlogs")
         else:
@@ -143,17 +153,23 @@ def editBlog(request, blog_id):
         blog = Blog.objects.get(ID=blog_id)
         if request.method == "POST":
             # Get Django Blog Form Created in forms.py and apply old values (which exists in task) to its fields
-            form = BlogForm(request.POST, instance=blog)
+            form = EditBlogForm(request.POST, instance=blog)
             # Check that form has no common errors
             if form.is_valid():
-                # Update the object with the new values provided by the user. 
-                # The `save()` method will automatically handle the update operation 
-                # and persist the changes to the database. 
+                tags_input = form.cleaned_data.get('tags')
+                if tags_input:
+                    tags_list = [tag.strip() for tag in tags_input.split(',')]
+                form.instance.tags.clear()
+                for _tag_name in tags_list:
+                    
+                    temp_default_category ,created = Category.objects.get_or_create(name="technology")
+                    tag , created = Tag.objects.get_or_create(category=temp_default_category,tag_name=_tag_name)
+                    form.instance.tags.add(tag)
                 form.save()
                 return redirect("blogPage", id=blog_id)
         else:
             # Get Django Blog Form Created in forms.py and apply old values to its fields
-            form = BlogForm(instance=blog)
+            form = EditBlogForm(instance = blog)
             
         context = {"form": form}
         # Render home page with help of context data (the Dynamic content)        
@@ -197,3 +213,9 @@ def myblogpage(request):
         posts = posts.filter(Q(title__icontains=query)|Q(content__icontains=query))
     
     return render (request, 'Blog/myblogpage.html', {'userposts':posts,'query':query})
+
+def tagposts(request,id):
+    
+    tag = Tag.objects.get(pk=id)
+    posts = tag.tag_posts.all()
+    return render(request, 'Blog/tagposts.html', {'Blogs':posts,'tag':tag.tag_name})

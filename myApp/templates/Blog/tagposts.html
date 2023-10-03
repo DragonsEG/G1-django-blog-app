@@ -34,7 +34,7 @@
 		{% include "Blog/blogNavBar.html" %}
 		<div class="container-md">
 			<div class="feed-search">
-				<h1>Feed</h1>    
+				<span>Filter: {{tag}}</span>  
 				<div> 
 					<form method="get" class="search-form">
 						<input type="text" name="q" placeholder="Search posts..." {% if query %}value="{{ query }}"{% endif %}>
