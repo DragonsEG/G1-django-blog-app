@@ -1,4 +1,5 @@
 {% block content %}
+{% load my_custom_tags %}
 <nav class="navbar sticky-top navbar-expand-lg" style="background-color: white;">
 	<div class="container-fluid">
     <a class="navbar-brand" href="{% url 'showBlogs' %}">
@@ -32,7 +33,7 @@
 					{% endif %}
 					<li class="nav-item">
             <a class="nav-link" href="{% url "showBlogs" %}">Blogs</a>
-          	</li>
+          </li>
 					{% if perms.myApp.add_blog %}
 					<li class="nav-item">
 						<a class="nav-link" href="{% url "myblogpage" %}">My Blogs</a>
@@ -41,8 +42,24 @@
 						<a class="nav-link" href="{% url "createBlog"%}">Create a Blog</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="{% url "category_list"%}"> Categories</a>
+						<a class="nav-link" href="{% url "category_list"%}">Categories</a>
 					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{% url "joinRequest" %}">Join Requests</a>
+					</li>
+					{% endif %}
+					{% if user.is_authenticated and request.user|has_group:"Member" %}
+						<li class="nav-item">
+							<a class="nav-link" href="{% url "createCompany" %}">Create Company</a>
+						</li>
+					{% elif user.is_authenticated and request.user|has_group:"Manager" %}
+						<li class="nav-item">
+							<a class="nav-link" href="{% url "myCompany" %}">My Company</a>
+						</li>
+					{% elif user.is_authenticated and request.user|has_group:"Employee" %}
+						<li class="nav-item">
+							<a class="nav-link" href="{% url "myCompany" %}">Your Company</a>
+						</li>
 					{% endif %}
 				</ul>
 			</div>

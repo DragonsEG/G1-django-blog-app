@@ -1,0 +1,12 @@
+.header-part {
+	margin-top: 40px;
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+}
+
+/* .btn-new-dark:hover {
+	color: #212529;
+	background-color: #fff;
+	border-color: #212529;
+} */

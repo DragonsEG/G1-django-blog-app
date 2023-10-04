@@ -23,13 +23,13 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
+        } 
 
         h1 {
             font-size: 24px;
             margin-bottom: 20px;
             color: #007bff;
-        }
+        } 
 
         /* Blog Card Styles */
         .blog-card {
@@ -39,16 +39,16 @@
             margin-bottom: 20px;
             background-color: #fff;
             box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-        }
+        } 
 
-        .blog-card h2 {
+        .blog-card h4 {
             font-size: 20px;
             margin: 0;
             color: #333;
-        }
+        } 
 
         .blog-card .meta-info {
-            font-size: 11px;
+            font-size: 13px;
             color: #777;
             margin-top: 10px;
             font-style: italic; /* Italic style */
@@ -80,10 +80,10 @@
 		float: right; /* Align to the right */
 		
 		clear: both; /* Clear the float */
-		}
+		} 
 
 
-        .search-form input[type="text"] {
+        .search-form input[type="search"] {
             width: 200px;
             padding: 6px;
             border: 1px solid #ddd;
@@ -98,9 +98,9 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-        }
+        } 
 
-        /* Create Post Button Styles */
+        {% comment %} /* Create Post Button Styles */
         .create-post-btn {
             display: block;
             margin-top: 20px;
@@ -111,42 +111,43 @@
             padding: 10px 20px;
             border-radius: 4px;
             text-decoration: none;
-        }
-
+        } {% endcomment %}
+{% comment %} 
         .create-post-btn:hover {
             background-color: #0056b3;
-        }
+        } {% endcomment %}
 
-			.header-search {
+	.header-search {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-	}
+	} 
 
-	/* Style the header separately if needed */
+	 /* Style the header separately if needed */
 	.header-search h1 {
 		margin: 0; /* Remove margin from h1 */
-	}
+	}  
 
-	/* Style the search form separately if needed */
+	{% comment %} /* Style the search form separately if needed */
 	.header-search .search-form {
 		margin-left: 20px; /* Add some margin to separate from the header */
-	}
+	} {% endcomment %}
     </style>
 </head>
 <body>
     {% include "Blog/blogNavBar.html" %}
+    {% include "message.html"%}
     <div class="container">
         <div class="header-search">
 			<h1>Feed</h1>
 			<form method="get" class="search-form">
-				<input type="text" name="q" placeholder="Search posts..." {% if query %}value="{{ query }}"{% endif %}>
+				<input type="search" name="q" placeholder="Search posts..." {% if query %}value="{{ query }}"{% endif %}>
 				<button type="submit">Search</button>
 			</form>
 		</div>
         {% for blog in Blogs %}
         <div class="blog-card">
-            <h2><a href="{% url "blogPage" id=blog.ID %}" style="color: #007bff;">{{ blog.title }}</a></h2>
+            <h4><a href="{% url "blogPage" id=blog.ID %}" style="color: #007bff;">{{ blog.title|capfirst }}</a></h4>
             <div class="meta-info">
                 <p class="meta-info">Created By {{ blog.author.username }} | At {{ blog.created_at }}</p>
             </div>
