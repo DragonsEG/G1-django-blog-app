@@ -14,6 +14,8 @@ from .forms import NewUserForm
 from django.contrib.auth.models import Group  # Import the Group model at the top of your views.py
 from .models import Category
 from .forms import CategoryForm
+from django.contrib.auth.forms import PasswordChangeForm
+
 
 
 def user_is_member(user):
@@ -296,4 +298,21 @@ def category_post_list(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
     posts = Blog.objects.filter(categories=category, publish_status='published')
     return render(request, 'category/post_category.html', {'category': category, 'posts': posts})
+
+
+
+@login_required
+def password_change(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('password_change')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'blog/change_password.html', {'form': form})
+
 

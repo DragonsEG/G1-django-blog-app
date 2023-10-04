@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 from .views import category_list, category_post_list,category_list1
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
   path("register/", views.register, name="register"),
@@ -17,6 +19,9 @@ urlpatterns = [
   path('not_allowed/', views.not_allowed, name='not_allowed'),
   path('myblog/',views.myBlogPage,name='myblogpage'),
   path('tagposts/<int:id>', views.tagposts, name='tagposts'),
+  path('change-password/', PasswordChangeView.as_view(), name='password_change'),
+  path('change-password/', auth_views.PasswordChangeView.as_view(template_name='change_password.html',success_url='/password-change-done/'  ), name='password_change'),
+  path('password-change-done/', auth_views.PasswordChangeDoneView.as_view(template_name='blog/password_change_done.html'), name='password_change_done'),
   # --------------------------------------
     path('blog/categories/', category_list, name='category_list'),
     path('blog/category/', category_list1, name='category_list1'),
