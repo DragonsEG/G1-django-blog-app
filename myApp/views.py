@@ -94,16 +94,26 @@ def createBlog(request):
                 selected_categories = form.cleaned_data.get('categories')
                 for selected_category in selected_categories:
                     blog.categories.add(selected_category)
-                    
                 ## Tagging the post
                 tags_input = form.cleaned_data.get('tags')
                 if tags_input:
                     tags_list = [tag.strip() for tag in tags_input.split(',')]
+                    categories = form.cleaned_data.get('categories')
+
+                    existing_tags = Tag.objects.filter(tag_name__in=tags_list)
+                    tag_instances = {}
+
                     for _tag_name in tags_list:
-                        # temp_default_category = Category.objects.get_or_create(name="technology")
-                        tag , created = Tag.objects.get_or_create(tag_name=_tag_name)
-                        blog.tags.add(tag)
-                
+                        tag_instance = existing_tags.filter(tag_name=_tag_name).first()
+                        if not tag_instance:
+                            tag_instance = Tag.objects.create(tag_name=_tag_name)
+                        tag_instances[_tag_name] = tag_instance
+                    blog.tags.add(*tag_instances.values())
+
+                    for category in categories:
+                        for tag_instance in tag_instances.values():
+                            tag_instance.category.add(category)
+
                 return redirect("showBlogs")
         else:
             form = BlogForm()
@@ -159,12 +169,24 @@ def editBlog(request, blog_id):
                 
                 if tags_input:
                     tags_list = [tag.strip() for tag in tags_input.split(',')]
-                    form.instance.tags.clear()
-                    for _tag_name in tags_list:
+                    categories = form.cleaned_data.get('categories')
                     
-                        temp_default_category ,created = Category.objects.get_or_create(name="technology")
-                        tag , created = Tag.objects.get_or_create(category=temp_default_category,tag_name=_tag_name)
-                        form.instance.tags.add(tag)
+                    existing_tags = Tag.objects.filter(tag_name__in=tags_list)
+                    tag_instances ={}
+                    
+                    for _tag_name in tags_list:
+                        tag_instance = existing_tags.filter(tag_name=_tag_name).first()
+                        if not tag_instance:
+                            tag_instance = Tag.objects.create(tag_name=_tag_name)
+                        tag_instances[_tag_name] = tag_instance
+                        
+                    form.instance.tags.clear()
+                    form.instance.tags.add(*tag_instances.values())
+                        
+                    for category in categories:
+                        for tag_instance in tag_instances.values():
+                            tag_instance.category.add(category)
+
                     
                 categories = form.cleaned_data.get('categories')
                 form.instance.categories.set(categories)
