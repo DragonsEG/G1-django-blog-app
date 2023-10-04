@@ -125,11 +125,12 @@ def createBlog(request):
 def showBlogs(request):
     query = request.GET.get('q')
     blogs = Blog.objects.filter(publish_status="published").order_by("-created_at")
+    categories = Category.objects.all()
 
     if query:
         blogs = blogs.filter(Q(title__icontains=query) | Q(content__icontains=query))
 
-    context = {"Blogs": blogs, "query": query}
+    context = {"Blogs": blogs, "query": query,'categories': categories,}
     return render(request, "Blog/home.html", context)
 
 def blogPage(request, id):
@@ -296,8 +297,3 @@ def category_post_list(request, category_id):
     posts = Blog.objects.filter(categories=category, publish_status='published')
     return render(request, 'category/post_category.html', {'category': category, 'posts': posts})
 
-
-    # query = request.GET.get('q')
-    # if query: 
-    #     posts = posts.filter(Q(title__icontains=query)|Q(content__icontains=query))
-    # return render(request, 'Blog/tagposts.html', {'Blogs':posts,'tag':tag.tag_name, "query":query})
