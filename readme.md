@@ -12,6 +12,8 @@
 - **Publish or Save as Draft**: Flexibly manage post publication.
 - **Bootstrap Styling**: Utilize Bootstrap for an enhanced and responsive user interface.
 - **permission**: permission and page for not_allowed.
+- **Category Management**: Organize Your Content Effectively.
+- **Tagging**: Describe Post Themes with Precision.
 
 
 
