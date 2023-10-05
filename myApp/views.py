@@ -22,6 +22,9 @@ def user_is_viewer(user):
 def isEmployee(user):
     return user.groups.filter(name='Employee').exists() or user.groups.filter(name='Manager').exists()
 
+def isManager(user):
+    return user.groups.filter(name='Manager').exists()
+
 def index(request):
     return redirect("showBlogs")
 
@@ -391,7 +394,7 @@ def myCompany(request, company_id=None):
     context = {"myCompany": myCompany, "companyBlogs": myCompanyBlogs, "nEmployees": nEmployees, "query": query} 
     return render(request, "blog/myCompany.html", context)
 
-@permission_required('myApp.add_join_request')
+@user_passes_test(isManager, login_url='not_allowed')
 def requestWriter(request):
     if request.method == "POST":
         form = RequestWriterForm(request.POST)
