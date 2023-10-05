@@ -9,7 +9,7 @@ class Company(models.Model):
 class UserProfile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE)
   company = models.ForeignKey(Company, on_delete=models.SET_NULL, blank=True, null=True)
-  auth_level = models.CharField(max_length=10, choices=[('viewer', 'Viewer'), ('writer', 'Writer'), ('admin', 'Admin'), ('manager', 'Manager')])
+  auth_level = models.CharField(max_length=10, null=True, choices=[('viewer', 'Viewer'), ('member', 'Member'), ('admin', 'Admin'), ('manager', 'Manager')], default="Member")
   groups = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
 
 class JoinRequest(models.Model):

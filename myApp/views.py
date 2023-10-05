@@ -41,8 +41,8 @@ def register(request):
                     groups = group
                 )
                 userProf.save()
-            # This User will be logged in
-            login(request, user)
+                # This User will be logged in
+                login(request, user)
             # Will be Redirected to Home page showing a success message
             messages.success(request, "Registration successful.")
             return redirect("showBlogs")
@@ -364,6 +364,8 @@ def createCompany(request):
             userProf = UserProfile.objects.get(user=request.user)
             userProf.company = _company
             userProf.auth_level = "Manager"
+            userProf.groups = group
+            userProf.save()
             messages.success(request, f"You are the Manager of {_company.name} Company Now.")
             return redirect("myCompany")
         else:
