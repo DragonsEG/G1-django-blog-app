@@ -78,6 +78,21 @@ def loginView(request):
 	form = AuthenticationForm()
 	return render(request, "Authentication/login.html", context={"form":form})
 
+@login_required
+def view_profile(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your profile has been updated.")
+            return redirect('view_profile')
+    else:
+        form = UserProfileForm(instance=user_profile)
+
+    return render(request, 'Blog/profile_user.html', {'form': form, 'user_profile': user_profile})
+
 def logoutRequest(request):
     logout(request)
     messages.info(request, "You have successfully logged out.") 

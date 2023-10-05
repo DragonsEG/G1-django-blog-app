@@ -119,3 +119,8 @@ class RequestWriterForm(forms.Form):
     def __init__(self, *args, **kwargs):
         # Call the parent class __init__ method
         super().__init__(*args, **kwargs)
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['user' , 'company' , 'auth_level']

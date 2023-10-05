@@ -44,4 +44,6 @@ urlpatterns = [
     path('blog/create_category/', views.Category_create, name='category_create'),
     path('blog/edit_category/<int:category_id>/', views.category_edit, name='category_edit'),
     path('blog/delete_category/<int:category_id>/', views.category_delete, name='category_delete'),
+    path('blog/userprofile/' , views.view_profile , name='user')
+    
 ]

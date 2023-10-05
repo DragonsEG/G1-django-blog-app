@@ -5,12 +5,16 @@ class Company(models.Model):
   ID = models.BigAutoField(auto_created = True, primary_key=True, verbose_name="ID")
   name = models.CharField(max_length=30)
   manager = models.ForeignKey(User, on_delete=models.CASCADE, blank=False)
+  def __str__(self):
+     
+     return self.name
   
 class UserProfile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE)
   company = models.ForeignKey(Company, on_delete=models.SET_NULL, blank=True, null=True)
   auth_level = models.CharField(max_length=10, null=True, choices=[('viewer', 'Viewer'), ('member', 'Member'), ('admin', 'Admin'), ('manager', 'Manager')], default="Member")
   groups = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
+  
 
 class JoinRequest(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
