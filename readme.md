@@ -1,6 +1,6 @@
 # Blog Management System
 
-**Blog Management System** is a Django web application designed for efficient blog post creation, management, and publishing. It includes user registration, authentication, post creation and editing, commenting, and search functionality. Users can choose to publish posts immediately or save them as drafts.
+**Blog Management System** is a Django web application designed to efficiently create, manage, and publish blog posts. It includes user registration, authentication, post creation and editing, commenting, tagging, category, password change, and search functionality. Users can choose to publish posts immediately or save them as drafts.
 
 ## Features
 
@@ -12,6 +12,8 @@
 - **Publish or Save as Draft**: Flexibly manage post publication.
 - **Bootstrap Styling**: Utilize Bootstrap for an enhanced and responsive user interface.
 - **permission**: permission and page for not_allowed.
+- **Category Management**: Organize Your Content Effectively.
+- **Tagging**: Describe Post Themes with Precision.
 
 
 

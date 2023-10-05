@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 from .views import category_list, category_post_list,category_list1
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
   path("register/", views.register, name="register"),
@@ -26,6 +28,16 @@ urlpatterns = [
   path("blog/companyWriters", views.companyWriters, name="companyWriters"),
   path("blog/companyProfile/id/<int:company_id>", views.myCompany, name="companyProfile"),
   # ---------------------------------------------------------------------------
+    path('blog/categories/', category_list, name='category_list'),
+    path('blog/category/', category_list1, name='category_list1'),
+    path('blog/categories/<int:category_id>/', category_post_list, name='category_post_list'),
+    path('blog/create_category/', views.Category_create, name='category_create'),
+    path('blog/edit_category/<int:category_id>/', views.category_edit, name='category_edit'),
+    path('blog/delete_category/<int:category_id>/', views.category_delete, name='category_delete'),
+  path('change-password/', PasswordChangeView.as_view(), name='password_change'),
+  path('change-password/', auth_views.PasswordChangeView.as_view(template_name='change_password.html',success_url='/password-change-done/'  ), name='password_change'),
+  path('password-change-done/', auth_views.PasswordChangeDoneView.as_view(template_name='blog/password_change_done.html'), name='password_change_done'),
+  # --------------------------------------
     path('blog/categories/', category_list, name='category_list'),
     path('blog/category/', category_list1, name='category_list1'),
     path('blog/categories/<int:category_id>/', category_post_list, name='category_post_list'),

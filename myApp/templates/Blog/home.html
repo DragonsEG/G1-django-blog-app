@@ -132,6 +132,42 @@
 	.header-search .search-form {
 		margin-left: 20px; /* Add some margin to separate from the header */
 	} {% endcomment %}
+	
+    .category {
+        display: none; /* Initially hide the category */
+    }
+
+    .category a {
+        display: inline-block;
+        padding: 14px;
+        text-decoration: none;
+        font-size: 18px;
+        color: #060606;
+        transition: 0.3s;
+        margin: 0px;
+        position: initial;
+    }
+
+
+    .category h1 {
+        font-size: 24px;
+        color: #fff;
+    }
+
+    /* Toggle Button Styles */
+    .toggle-button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+    }
+
+    .toggle-button:hover {
+        background-color: #0056b3;
+    }
     </style>
 </head>
 <body>
@@ -145,6 +181,15 @@
 				<button type="submit">Search</button>
 			</form>
 		</div>
+        <button class="toggle-button" onclick="toggleCategories()">Show Categories</button>
+        <div class="category" id="category">
+            {% comment %} <h1>Categories</h1> {% endcomment %}
+            {% for category in categories %}
+            <a href="{% url 'category_post_list' category.id %}">{{ category.name }}</a>
+            {% empty %}
+            <p>No categories found.</p>
+            {% endfor %}
+        </div>
         {% for blog in Blogs %}
         <div class="blog-card">
             <h4><a href="{% url "blogPage" id=blog.ID %}" style="color: #007bff;">{{ blog.title|capfirst }}</a></h4>
@@ -164,5 +209,18 @@
         <a href="{% url "createBlog" %}" class="create-post-btn">Create a Post</a>
         {% endif %}
     </div>
+    <script>
+        let categoriesVisible = false;
+
+        function toggleCategories() {
+            const category = document.getElementById("category");
+            if (!categoriesVisible) {
+                category.style.display = "block"; // Show the categories
+            } else {
+                category.style.display = "none"; // Hide the categories
+            }
+            categoriesVisible = !categoriesVisible;
+        }
+    </script>
 </body>
 </html>

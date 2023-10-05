@@ -22,7 +22,7 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 class Tag(models.Model):
-  category  = models.ForeignKey(Category,on_delete=models.CASCADE,related_name='tags')
+  category  = models.ManyToManyField(Category,related_name='tags')
   tag_name  = models.CharField(max_length=100)
   
   def __str__(self):
