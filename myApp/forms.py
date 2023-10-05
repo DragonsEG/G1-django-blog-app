@@ -124,3 +124,15 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['user' , 'company' , 'auth_level']
+        
+        
+        
+class RequestWriterForm(forms.ModelForm):
+    class Meta:
+        model = JoinRequest
+        fields = ['user']
+
+    def __init__(self, *args, **kwargs):
+        super(RequestWriterForm, self).__init__(*args, **kwargs)
+        # Filter users by the "Member" group
+        self.fields['user'].queryset = User.objects.filter(groups__name='Member')
