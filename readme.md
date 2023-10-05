@@ -13,7 +13,12 @@
 - **Bootstrap Styling**: Utilize Bootstrap for an enhanced and responsive user interface.
 - **permission**: permission and page for not_allowed.
 - **Category Management**: Organize Your Content Effectively.
-- **Tagging**: Describe Post Themes with Precision.
+- **Managing Join Requests (joinRequest, approveRequest, rejectRequest)**: Users can send and manage join requests to join companies. Managers have the ability to approve       or reject these requests.
+- **Creating Companies (createCompany)**: Users with the necessary permissions can create companies.
+- **Viewing Company Information (myCompany)**: Users can view information about the company they belong to, such as the number of employees and company-specific blog posts.
+- **Requesting Writer Access to a Company (requestWriter)**: Managers can send requests to users to join their company as writers.
+- **Viewing Company Writers (companyWriters)**: Users can view a list of writers in their company.
+- **Password Change (password_change)**: Easily  change their passwords.
 
 
 
