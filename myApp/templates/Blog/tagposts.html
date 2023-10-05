@@ -34,7 +34,7 @@
 		{% include "Blog/blogNavBar.html" %}
 		<div class="container-md">
 			<div class="feed-search">
-				<span>Filter: {{tag}}</span>  
+				<span>Filter: {{tag|capfirst}}</span>
 				<div> 
 					<form method="get" class="d-flex search-form" role="search">
 						<input class="form-control me-2" type="search" name="q" placeholder="Search posts..." {% if query %}value="{{ query }}"{% endif %}>
@@ -44,7 +44,7 @@
 			</div>
 			{% for blog in Blogs %}
 			<div class="container-sm container">
-				<h2><a href="{% url "blogPage" id=blog.ID %}">{{ blog.title }}</a></h2>
+				<h5><a href="{% url "blogPage" id=blog.ID %}">{{ blog.title|capfirst  }}</a></h5>
 				<div class="little">
 					<div>Created By: {{ blog.author.username }}</div>
 					<div>Created At: {{ blog.created_at }}</div>

@@ -1,16 +1,26 @@
 from django.db import models
 from django.contrib.auth.models import User , Group
 # Create your models here.  
+class Company(models.Model):
+  ID = models.BigAutoField(auto_created = True, primary_key=True, verbose_name="ID")
+  name = models.CharField(max_length=30)
+  manager = models.ForeignKey(User, on_delete=models.CASCADE, blank=False)
+  
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    auth_level = models.CharField(max_length=10, choices=[('viewer', 'Viewer'), ('writer', 'Writer'), ('admin', 'Admin')])
-    groups = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
+  user = models.OneToOneField(User, on_delete=models.CASCADE)
+  company = models.ForeignKey(Company, on_delete=models.SET_NULL, blank=True, null=True)
+  auth_level = models.CharField(max_length=10, choices=[('viewer', 'Viewer'), ('writer', 'Writer'), ('admin', 'Admin'), ('manager', 'Manager')])
+  groups = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
 
+class JoinRequest(models.Model):
+  user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
+  company = models.ForeignKey(Company, on_delete=models.CASCADE, blank=True)
+  status = models.CharField(max_length=10, choices=[('Pending', 'pending'), ('Approved', 'approved'), ('Rejected', 'rejected')], default="Pending")
+  
 class Category(models.Model):
-    name = models.CharField(max_length=150) 
-    
+    name = models.CharField(max_length=100)
     def __str__(self):
-      return self.name
+        return self.name
 class Tag(models.Model):
   category  = models.ForeignKey(Category,on_delete=models.CASCADE,related_name='tags')
   tag_name  = models.CharField(max_length=100)
@@ -28,6 +38,8 @@ class Blog(models.Model):
   is_draft = models.BooleanField(default=True)
   publish_status = models.CharField(max_length=10, choices=[('draft', 'Draft'), ('published', 'Published')], default='draft')
   tags = models.ManyToManyField(Tag,related_name="tag_posts")
+  categories = models.ManyToManyField(Category)
+  company = models.ForeignKey(Company, on_delete=models.SET_NULL, blank=True, null=True)
   
   def __str__(self):
       return self.title
@@ -38,4 +50,4 @@ class Comment(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False)
   blog = models.ForeignKey(Blog, on_delete=models.CASCADE, blank=False)
   created_at = models.DateTimeField(auto_now_add=True, blank=True)
-  updated_at = models.DateTimeField(auto_now=True)  
+  updated_at = models.DateTimeField(auto_now=True)

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %} {% load crispy_forms_tags %}
+{% load my_custom_tags %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/home.css' %}" rel="stylesheet">
+    <link href="{% static 'css/company.css' %}" rel="stylesheet">
+    <title>{{myCompany.name}} Company</title>
+    <style>
+      .meta-info {
+        font-size: 13px;
+        color: #777;
+        margin-top: 10px;
+        font-style: italic; /* Italic style */
+      }
+
+      .tags {
+        margin-top: 10px;
+      }
+
+      .tag {
+        display: inline-block;
+        padding: 4px 8px;
+        margin-right: 8px;
+        background-color: #e6f7ff;
+        color: #007bff;
+        border-radius: 4px;
+        font-size: 11px;
+        text-decoration: none;
+        font-weight: bold; /* Bold tags */
+      }
+
+      .tag:hover {
+        background-color: #0056b3;
+        color: #e6f7ff;
+      }
+    </style>
+</head>
+<body>
+    {% include "Blog/blogNavBar.html" %}
+    {% include "message.html"%}
+    <div class="container-md">
+      <div class="cotainer-sm container">
+        <h1 class="text-center" style="font-weight: 700">{{myCompany.name}} Company</h1>
+        <div class="header-part">
+        <p class="text-body-secondary fst-italic" style="font-size: 14.5px">Number of Employee: {{nEmployees}}</p>
+        {% if user|isCompanyManager:myCompany.ID %}
+        <div>
+            <a class="btn btn-primary" role="button" href="{% url "companyWriters" %}">Company Writers</a>
+            <a class="btn btn-outline-primary" role="button" href="{% url "requestWriter" %}">Request a Writer</a>
+        </div>
+        {% endif %}
+        </div>
+      </div>
+      <div class="feed-search">
+        <h1>Company Blogs</h1>
+          <div> 
+              <form method="get" class="d-flex search-form" role="search">
+                  <input class="form-control me-2" type="search" name="q" placeholder="Search Company Posts..." {% if query %}value="{{ query }}"{% endif %}>
+                  <button class="btn btn-primary" type="submit">Search</button>
+              </form>
+          </div>
+		  </div>
+      {% for blog in companyBlogs %}
+      <div class="container-sm container">
+          <h4><a href="{% url "blogPage" id=blog.ID %}">{{ blog.title|capfirst }}</a></h4>
+          <div class="meta-info">
+              <p class="meta-info">Created By {{ blog.author.username }} | At {{ blog.created_at }}</p>
+          </div>
+          <div class="tags">
+              {% if blog.tags.all %}
+                {% for tag in blog.tags.all %}
+                  <a href="{% url "tagposts" tag.pk %}" class="tag">{{ tag.tag_name }}</a>
+                {% endfor %}
+              {% endif %}
+          </div>
+      </div>
+      {% endfor %}
+
+      {% if request.user|isCompanyEmployee:myCompany.ID %}
+      <a href="{% url "createBlog" %}" class="create-post-btn">Create a Post</a>
+      {% endif %}
+    </div>
+</body>
+</html>
