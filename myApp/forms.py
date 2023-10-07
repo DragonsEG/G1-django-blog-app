@@ -108,7 +108,7 @@ class CategoryForm(forms.ModelForm):
         model = Category
         fields = ['name']
 
-class RequestWriterForm(forms.Form):
+class RequestWriterForm(forms.ModelForm):
     writer = forms.ModelChoiceField(queryset=User.objects.all(), required=True)        
     
     class Meta: 
