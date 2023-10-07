@@ -112,7 +112,7 @@ def createBlog(request):
                 publish_status = form.cleaned_data.get('publish_status')
                 is_draft = publish_status == 'draft'
                 blog.is_draft = is_draft
-                userProf = UserProfile.objects.get(user=request.user)
+                userProf, created = UserProfile.objects.get_or_create(user=request.user)
                 blog.company = userProf.company or None
                 blog.save()
                 # Check if a category has been selected
@@ -328,7 +328,7 @@ def joinRequest(request):
 
 @login_required
 def approveRequest(request, company_id, request_id):
-    userProf = UserProfile.objects.get(user=request.user)
+    userProf, created = UserProfile.objects.get_or_create(user=request.user)
     if userProf.company:
         messages.error(request,"Cannot Join a Company Because You're already in a one")
     else:    
@@ -404,10 +404,17 @@ def myCompany(request, company_id=None):
     
     query = request.GET.get('q')
     if query: 
-        myCompanyBlogs = myCompanyBlogs.filter(Q(title__icontains=query)|Q(content__icontains=query))
+        myCompanyBlogs = myCompanyBlogs.filter(Q(title__icontains=query) | Q(content__icontains=query))
             
-    context = {"myCompany": myCompany, "companyBlogs": myCompanyBlogs, "nEmployees": nEmployees, "query": query} 
+    context = {
+        "myCompany": myCompany,
+        "companyBlogs": myCompanyBlogs,
+        "nEmployees": nEmployees,
+        "query": query,
+        "blog": None  # Add the 'blog' object to the context
+    } 
     return render(request, "blog/myCompany.html", context)
+
 
 @user_passes_test(isManager, login_url='not_allowed')
 def requestWriter(request):
@@ -433,7 +440,7 @@ def requestWriter(request):
 def companyWriters(request):
     thisWriter = UserProfile.objects.get(user=request.user)
     writers = UserProfile.objects.filter(company=thisWriter.company)
-    context = {"writers": writers}
+    context = {"writers": writers, "company": thisWriter.company}  # Add "company" to the context
     return render(request, "blog/companyWriters.html", context)
 
 
@@ -450,5 +457,4 @@ def password_change(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'blog/change_password.html', {'form': form})
-
 

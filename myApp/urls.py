@@ -37,6 +37,8 @@ urlpatterns = [
     path('change-password/', PasswordChangeView.as_view(), name='password_change'),
     path('change-password/', auth_views.PasswordChangeView.as_view(template_name='change_password.html',success_url='/password-change-done/'  ), name='password_change'),
     path('password-change-done/', auth_views.PasswordChangeDoneView.as_view(template_name='blog/password_change_done.html'), name='password_change_done'),
-    path('blog/userprofile/' , views.view_profile , name='user')
-    
+    path('blog/userprofile/' , views.view_profile , name='user'),
 ]
+
+    
+

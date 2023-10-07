@@ -168,7 +168,7 @@
     <div class="container">
         <div class="header">
             <h1>{{ Blog.title }}</h1>
-            {% if request.user == Blog.author %}
+            {% if request.user == Blog.author  %}
             <div class="edit-delete-buttons">
                 <a href="{% url "editBlog" blog_id=Blog.ID %}" class="edit-button">Edit</a>
                 <a href="{% url "deleteBlog" blog_id=Blog.ID %}" class="delete-button">Delete</a>

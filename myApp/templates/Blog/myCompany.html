@@ -65,11 +65,14 @@
               </form>
           </div>
 		  </div>
+
+        
+    </div>
       {% for blog in companyBlogs %}
       <div class="container-sm container">
           <h4><a href="{% url "blogPage" id=blog.ID %}">{{ blog.title|capfirst }}</a></h4>
           <div class="meta-info">
-              <p class="meta-info">Created By {{ blog.author.username }} | At {{ blog.created_at }}</p>
+              <p class="meta-info">Created By {{ blog.author.username }} | At {{ blog.created_at }} | {{myCompany.name}} Company</p>
           </div>
           <div class="tags">
               {% if blog.tags.all %}
@@ -77,12 +80,20 @@
                   <a href="{% url "tagposts" tag.pk %}" class="tag">{{ tag.tag_name }}</a>
                 {% endfor %}
               {% endif %}
-          </div>
+            </div>
+            {% if request.user|isCompanyManager:myCompany.ID or request.user == blog.author %}
+            <!-- Display edit and delete links for managers and the author -->
+            <a href="{% url 'editBlog' blog_id=blog.ID %}" class="edit-button">Edit</a>
+            <a href="{% url 'deleteBlog' blog_id=blog.ID %}" class="delete-button">Delete</a>
+        {% endif %}
       </div>
+</div>
       {% endfor %}
 
       {% if request.user|isCompanyEmployee:myCompany.ID %}
       <a href="{% url "createBlog" %}" class="create-post-btn">Create a Post</a>
+      
+      
       {% endif %}
     </div>
 </body>

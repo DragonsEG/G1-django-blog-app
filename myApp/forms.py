@@ -113,13 +113,13 @@ class RequestWriterForm(forms.ModelForm):
     
     class Meta: 
         model = JoinRequest
-        fields = ['user']
+        fields = ['writer']
         
     # The constructor
     def __init__(self, *args, **kwargs):
         super(RequestWriterForm, self).__init__(*args, **kwargs)
         # Filter users by the "Member" group
-        self.fields['user'].queryset = User.objects.filter(groups__name='Member')
+        self.fields['writer'].queryset = User.objects.filter(groups__name='Member')
 
 class UserProfileForm(forms.ModelForm):
     class Meta:
@@ -128,3 +128,5 @@ class UserProfileForm(forms.ModelForm):
         
         
         
+
+

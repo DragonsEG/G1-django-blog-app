@@ -16,12 +16,12 @@
 			<ol class="list-group list-group-numbered">
 				{% for writer in writers %}
 				<li class="list-group-item container">
-					<a href="#" style="font-size: 18px"
-						>{{ writer.user.username|capfirst}}</a
-					>
+					<a href="#" style="font-size: 18px">{{ writer.user.username|capfirst}}</a>
 				</li>
+				
 				{% endfor%}
 			</ol>
 		</div>
+		{% comment %} <a href="{% url "remove_user_from_company" company_id=some_company_id user_id=some_user_id %}" class="create-post-btn">remove</a> {% endcomment %}
 	</body>
 </html>
