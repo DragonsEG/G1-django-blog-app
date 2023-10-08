@@ -444,6 +444,24 @@ def companyWriters(request):
     return render(request, "blog/companyWriters.html", context)
 
 
+
+@login_required
+def edit_user_name(request):
+    if request.method == 'POST':
+        form = UserNameEditForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('user')  
+    else:
+        form = UserNameEditForm(instance=request.user)
+    
+    return render(request, 'blog/edit_profile.html', {'form': form})
+
+
+
+def view_user_photo(request):
+    user_profile = request.user.userprofile
+    return render(request, 'blog/profile_user.html', {'user_profile': user_profile})
 @login_required
 def password_change(request):
     if request.method == 'POST':

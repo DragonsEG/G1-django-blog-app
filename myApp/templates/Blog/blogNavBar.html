@@ -6,6 +6,7 @@
       <img src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
       Blog
     </a>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
 		<button
 			class="navbar-toggler"
 			type="button"
@@ -18,53 +19,78 @@
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-				<ul class="navbar-nav mr-auto">
-					{% if user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url "user" %}">Welcome, {{user.username}}</a>
-          </li>
-					<li class="nav-item">
-						<a class="d-flex nav-link" href="{% url "logout" %}">Logout</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{% url "password_change"%}">Change Password</a>
-					</li>
-					{% else %}
-					<li class="nav-item">
-						<a class="d-flex nav-link" href="{% url "login" %}">Login</a>
-					</li>
-					{% endif %}
-					<li class="nav-item">
-            <a class="nav-link" href="{% url "showBlogs" %}">Blogs</a>
-          </li>
-					{% if perms.myApp.add_blog %}
-					<li class="nav-item">
-						<a class="nav-link" href="{% url "myblogpage" %}">My Blogs</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{% url "createBlog"%}">Create a Blog</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{% url "category_list"%}">Categories</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{% url "joinRequest" %}">Join Requests</a>
-					</li>
-					{% endif %}
-					{% if user.is_authenticated and request.user|has_group:"Member" %}
-						<li class="nav-item">
-							<a class="nav-link" href="{% url "createCompany" %}">Create Company</a>
-						</li>
-					{% elif user.is_authenticated and request.user|has_group:"Manager" %}
-						<li class="nav-item">
-							<a class="nav-link" href="{% url "myCompany" %}">My Company</a>
-						</li>
-					{% elif user.is_authenticated and request.user|has_group:"Employee" %}
-						<li class="nav-item">
-							<a class="nav-link" href="{% url "myCompany" %}">Your Company</a>
-						</li>
-					{% endif %}
-				</ul>
+			<ul class="navbar-nav mr-auto">
+				{% if user.is_authenticated %}
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'user' %}">
+						<i class="fas fa-user"></i> Welcome, {{ user.username }}
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'logout' %}">
+						<i class="fas fa-sign-out-alt"></i> Logout
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'password_change' %}">
+						<i class="fas fa-key"></i> Change Password
+					</a>
+				</li>
+				{% else %}
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'login' %}">
+						<i class="fas fa-sign-in-alt"></i> Login
+					</a>
+				</li>
+				{% endif %}
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'showBlogs' %}">
+						<i class="fas fa-blog"></i> Blogs
+					</a>
+				</li>
+				{% if perms.myApp.add_blog %}
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'myblogpage' %}">
+						<i class="fas fa-home"></i> Home
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'createBlog' %}">
+						<i class="fas fa-plus"></i> Create a Blog
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'category_list' %}">
+						<i class="fas fa-list"></i> Categories
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'joinRequest' %}">
+						<i class="fas fa-user-friends"></i> Join Requests
+					</a>
+				</li>
+				{% endif %}
+				{% if user.is_authenticated and request.user|has_group:"Member" %}
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'createCompany' %}">
+						<i class="fas fa-building"></i> Create Company
+					</a>
+				</li>
+				{% elif user.is_authenticated and request.user|has_group:"Manager" %}
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'myCompany' %}">
+						<i class="fas fa-building"></i> My Company
+					</a>
+				</li>
+				{% elif user.is_authenticated and request.user|has_group:"Employee" %}
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'myCompany' %}">
+						<i class="fas fa-building"></i> Your Company
+					</a>
+				</li>
+				{% endif %}
+			</ul>
+			
 			</div>
 		</div>
 	</div>

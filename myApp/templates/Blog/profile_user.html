@@ -38,13 +38,36 @@
             color: #555;
             margin-bottom: 10px;
         }
+        .img-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .img-container img {
+            max-width: 300px; /* Adjust the max width as needed */
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
     </style>
 
 <div class="profile-container">
     <b><h1 style="font-weight:bolder;" >{{ user.username }}</h1></b>
     <p>Company: {{ user.userprofile.company }}</p>
     <p>Joined: {{ user.date_joined }}</p>
-</div>
+    {% comment %} <p>Joined: {{ user.photo }}</p> {% endcomment %}
+    <a href="{% url 'edit_user_name' %}">Edit Profile</a>
+    <div class="img-container">
+        {% comment %} <h1>{{ request.user.username }}</h1> {% endcomment %}
+        {% if user_profile.photo %}
+            <img src="{{ user_profile.photo.url }}" alt="{{ request.user.username }}'s Photo">
+        {% else %}
+            <p>No photo available</p>
+        {% endif %}
+    </div>
+    
 
+
+</div>
 </body>
 </html>

@@ -121,12 +121,15 @@ class RequestWriterForm(forms.ModelForm):
         # Filter users by the "Member" group
         self.fields['writer'].queryset = User.objects.filter(groups__name='Member')
 
+
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['user' , 'company' , 'auth_level']
+        fields = ['user' , 'company' , 'auth_level',]
         
         
         
-
-
+class UserNameEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username']

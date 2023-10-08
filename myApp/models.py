@@ -15,7 +15,11 @@ class UserProfile(models.Model):
   company = models.ForeignKey(Company, on_delete=models.SET_NULL, blank=True, null=True)
   auth_level = models.CharField(max_length=10, null=True, choices=[('viewer', 'Viewer'), ('member', 'Member'), ('admin', 'Admin'), ('manager', 'Manager')], default="Member")
   groups = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
-  
+  photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
+  # user_name = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='profile')
+
+  # def __str__(self):
+        # return self.user.username
 
 class JoinRequest(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)

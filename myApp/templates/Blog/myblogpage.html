@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
     <link href="{% static 'css/home.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
     <title>Feed</title>
     <style>
         /* General Styles */
@@ -31,6 +32,12 @@
             color: #007bff;
         }
 
+        h2 {
+            font-size: 15px;
+            margin-bottom: 20px;
+            color: #151a1f;
+        }
+
         /* Blog Card Styles */
         .blog-card {
             border: 1px solid #ddd;
@@ -51,7 +58,7 @@
             font-size: 11px;
             color: #777;
             margin-top: 10px;
-            font-style: italic; /* Italic style */
+            font-style: italic;
         }
 
         .blog-card .tags {
@@ -67,28 +74,26 @@
             border-radius: 4px;
             font-size: 11px;
             text-decoration: none;
-            font-weight: bold; /* Bold tags */
+            font-weight: bold;
         }
 
         .blog-card .tag:hover {
             background-color: #0056b3;
-			color: #e6f7ff;
+            color: #e6f7ff;
         }
 
         /* Search Form Styles */
-		.search-form {
-		float: right; /* Align to the right */
-		
-		clear: both; /* Clear the float */
-		}
-
+        .search-form {
+            float: right;
+            clear: both;
+        }
 
         .search-form input[type="text"] {
             width: 200px;
             padding: 6px;
             border: 1px solid #ddd;
             border-radius: 4px;
-			margin-bottom: 20px;
+            margin-bottom: 20px;
         }
 
         .search-form button {
@@ -98,6 +103,24 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            transition: background-color 0.3s ease; /* Add transition */
+        }
+
+        /* Add hover effect */
+        .search-form button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Edit Profile Link Styles */
+        .edit-profile-link {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s ease; /* Add transition */
+        }
+
+        /* Add hover effect */
+        .edit-profile-link:hover {
+            color: #0056b3;
         }
 
         /* Create Post Button Styles */
@@ -111,39 +134,43 @@
             padding: 10px 20px;
             border-radius: 4px;
             text-decoration: none;
+            transition: background-color 0.3s ease; /* Add transition */
         }
 
+        /* Add hover effect */
         .create-post-btn:hover {
             background-color: #0056b3;
         }
 
-			.header-search {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	}
+        .header-search {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-	/* Style the header separately if needed */
-	.header-search h1 {
-		margin: 0; /* Remove margin from h1 */
-	}
+        /* Style the header separately if needed */
+        .header-search h1 {
+            margin: 0;
+        }
 
-	/* Style the search form separately if needed */
-	.header-search .search-form {
-		margin-left: 20px; /* Add some margin to separate from the header */
-	}
+        /* Style the search form separately if needed */
+        .header-search .search-form {
+            margin-left: 20px;
+        }
     </style>
 </head>
 <body>
     {% include "Blog/blogNavBar.html" %}
     <div class="container">
         <div class="header-search">
-			<h1>My Blog Posts</h1>
-			<form method="get" class="search-form">
-				<input type="text" name="q" placeholder="Search posts..." {% if query %}value="{{ query }}"{% endif %}>
-				<button type="submit">Search</button>
-			</form>
-		</div>
+            <h1><i class="fas fa-user"></i> {{ request.user.username }}</h1>
+            <a href="{% url 'edit_user_name' %}" class="edit-profile-link"><i class="fas fa-edit"></i> Edit Profile</a>
+            <form method="get" class="search-form">
+                <input type="text" name="q" placeholder="Search posts..." {% if query %}value="{{ query }}"{% endif %}>
+                <button type="submit"><i class="fas fa-search"></i> Search</button>
+            </form>
+        </div>
+        <h2>Company: {{ user.userprofile.company }}</h2>
         {% for blog in Blogs %}
         <div class="blog-card">
             <h2><a href="{% url "blogPage" id=blog.ID %}" style="color: #007bff;">{{ blog.title }}</a></h2>
@@ -160,7 +187,9 @@
         </div>
         {% endfor %}
         {% if perms.myApp.add_blog %}
-        <a href="{% url "createBlog" %}" class="create-post-btn">Create a Post</a>
+        <a href="{% url "createBlog" %}" class="create-post-btn">
+            <i class="fas fa-plus"></i> Create a Post
+        </a>
         {% endif %}
     </div>
 </body>
