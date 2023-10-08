@@ -476,3 +476,21 @@ def password_change(request):
         form = PasswordChangeForm(request.user)
     return render(request, 'blog/change_password.html', {'form': form})
 
+def leave_company(request):
+    if request.user.is_authenticated:
+        user_profile = request.user.userprofile
+
+        if user_profile.company:
+            user_profile.company = None
+            user_profile.auth_level = 'Member'
+            member_group, created = Group.objects.get_or_create(name='Member')
+            request.user.groups.add(member_group)
+            user_profile.groups = member_group
+            user_profile.save()
+
+            messages.success(request, 'You have left the company.')
+        else:
+            messages.error(request, 'You are not currently a member of any company.')
+
+    return redirect('showBlogs') 
+
