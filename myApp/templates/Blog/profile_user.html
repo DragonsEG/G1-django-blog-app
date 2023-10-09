@@ -7,20 +7,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
     <link href="{% static 'css/home.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
     <title>Create Blog</title>
 </head>
 <body>
-
+    
     {% include "Blog/blogNavBar.html" %}
-
     <style>
+        /* Existing styles here */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f0f0f0;
         }
-
+        
         .profile-container {
             max-width: 600px;
             margin: 50px auto;
@@ -29,15 +30,16 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
+        
         h1 {
             color: #333;
         }
-
+        
         p {
             color: #555;
             margin-bottom: 10px;
         }
+        
         .img-container {
             text-align: center;
             margin-top: 20px;
@@ -49,25 +51,31 @@
             border-radius: 5px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
         }
+        
+        /* Additional styles here */
+        /* For example, you can add a style for the "Edit Profile" link */
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        /* Add more styles as needed */
     </style>
 
 <div class="profile-container">
-    <b><h1 style="font-weight:bolder;" >{{ user.username }}</h1></b>
+    <b><h1 style="font-weight: bolder;">{{ user.username }}</h1></b>
     <p>Company: {{ user.userprofile.company }}</p>
     <p>Joined: {{ user.date_joined }}</p>
-    {% comment %} <p>Joined: {{ user.photo }}</p> {% endcomment %}
     <a href="{% url 'edit_user_name' %}">Edit Profile</a>
     <div class="img-container">
-        {% comment %} <h1>{{ request.user.username }}</h1> {% endcomment %}
-        {% if user_profile.photo %}
-            <img src="{{ user_profile.photo.url }}" alt="{{ request.user.username }}'s Photo">
+        <h1>{{ request.user.username }}</h1>
+        {% if user_profile.photo %}<img src="{{ user_profile.photo.url }}" alt="{{ request.user.username }}'s Photo">
         {% else %}
             <p>No photo available</p>
         {% endif %}
     </div>
-    
-
-
 </div>
+
 </body>
 </html>
+

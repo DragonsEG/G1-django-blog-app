@@ -128,6 +128,24 @@
             display: none;
             margin: 11px;
         }
+        .user-photo {
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 20px;
+        }
+    
+        .user-photo img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            {% comment %} border: 3px solid #007bff; {% endcomment %}
+        }
+        .header-search {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
         
     </style>
 </head>
@@ -157,6 +175,13 @@
         </div>
         {% for blog in Blogs %}
         <div class="blog-card">
+            {% if blog.author.userprofile.photo %}
+            <div class="header-search">
+            <div class="user-photo">
+                <img src="{{ blog.author.userprofile.photo.url }}" alt="{{ blog.author.username }}">
+            </div>
+        </div>
+            {% endif %}
             <h4><a href="{% url "blogPage" id=blog.ID %}" style="color: #007bff;">{{ blog.title|capfirst }}</a></h4>
             <div class="meta-info">
                 <p class="meta-info">Created By {{ blog.author.username }} | At {{ blog.created_at }}</p>
@@ -191,3 +216,4 @@
     </script>
 </body>
 </html>
+

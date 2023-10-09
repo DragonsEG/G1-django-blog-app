@@ -41,7 +41,7 @@ def register(request):
                 userProf = UserProfile(
                     user = user,
                     auth_level = group_name,
-                    groups = group
+                    groups = group,
                 )
                 userProf.save()
                 # This User will be logged in
@@ -162,6 +162,7 @@ def blogPage(request, id):
         # Get object from Blog Model by its ID
         _blog = Blog.objects.get(ID=id)
         comments = Comment.objects.filter(blog=_blog).order_by("-created_at")
+        
         context = {"Blog": _blog , "Comments": comments} 
         # Render home page with help of context data (the Dynamic content)          
         return render(request, "Blog/blogPage.html", context)
@@ -449,14 +450,16 @@ def companyWriters(request):
 def edit_user_name(request):
     if request.method == 'POST':
         form = UserNameEditForm(request.POST, instance=request.user)
-        if form.is_valid():
+        profile_form = UserProfileEditForm(request.POST, request.FILES, instance=request.user.userprofile)
+        if form.is_valid() and profile_form.is_valid():
             form.save()
+            profile_form.save()
             return redirect('user')  
     else:
         form = UserNameEditForm(instance=request.user)
+        profile_form = UserProfileEditForm(instance=request.user.userprofile)
     
-    return render(request, 'blog/edit_profile.html', {'form': form})
-
+    return render(request, 'blog/edit_profile.html', {'form': form, 'profile_form': profile_form})
 
 
 def view_user_photo(request):
@@ -493,4 +496,5 @@ def leave_company(request):
             messages.error(request, 'You are not currently a member of any company.')
 
     return redirect('showBlogs') 
+
 

@@ -157,22 +157,75 @@
         .header-search .search-form {
             margin-left: 20px;
         }
+        /* User Photo Style */
+        .user-photo {
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 20px;
+        }
+
+        .user-photo img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+        }
+        .user-photo {
+            margin-right: 10px; /* Add spacing between the photo and tags */
+        }
+        
+        .user-photo img {
+            width: 50px;
+            height: 56px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #007bff;
+        }
+        .user-photo {
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 20px;
+        }
+        
+        .user-photo img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border: 3px solid #007bff;
+        }
+        .user-photo {
+            margin-right: 10px;
+        }
+        
     </style>
+    
 </head>
 <body>
     {% include "Blog/blogNavBar.html" %}
     <div class="container">
         <div class="header-search">
-            <h1><i class="fas fa-user"></i> {{ request.user.username }}</h1>
+            {% if request.user.userprofile.photo %}
+            <div class="user-photo">
+                <img src="{{ request.user.userprofile.photo.url }}" alt="{{ request.user.username }}">
+            </div>
+            {% endif %}
+            <h1><i class=""></i> {{ request.user.username }}</h1>
             <a href="{% url 'edit_user_name' %}" class="edit-profile-link"><i class="fas fa-edit"></i> Edit Profile</a>
             <form method="get" class="search-form">
                 <input type="text" name="q" placeholder="Search posts..." {% if query %}value="{{ query }}"{% endif %}>
                 <button type="submit"><i class="fas fa-search"></i> Search</button>
             </form>
         </div>
-        <h2>Company: {{ user.userprofile.company }}</h2>
+        <h2>Company: {{ request.user.userprofile.company }}</h2>
         {% for blog in Blogs %}
         <div class="blog-card">
+                <div class="header-search">
+            {% if request.user.userprofile.photo %}
+            <div class="user-photo">
+                <img src="{{ request.user.userprofile.photo.url }}" alt="{{ request.user.username }}">
+            </div>
+        </div>
+    
+            {% endif %}
             <h2><a href="{% url "blogPage" id=blog.ID %}" style="color: #007bff;">{{ blog.title }}</a></h2>
             <div class="meta-info">
                 <p class="meta-info">Created By {{ blog.author.username }} At {{ blog.created_at }}</p>
@@ -180,6 +233,7 @@
             <div class="tags">
                 {% if blog.tags.all %}
                 {% for tag in blog.tags.all %}
+
                 <a href="{% url "tagposts" tag.pk %}" class="tag">{{ tag.tag_name }}</a>
                 {% endfor %}
                 {% endif %}

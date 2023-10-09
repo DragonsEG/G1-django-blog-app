@@ -1,6 +1,28 @@
-
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save Changes</button>
-  </form>
+<!DOCTYPE html>
+<html lang="en">
+{% load static %} {% load crispy_forms_tags %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/home.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
+    <title>Edit Profile</title>
+</head>
+<body>
+    
+    {% include "Blog/blogNavBar.html" %}
+    
+    <div class="profile-container" style="padding: 33px;">
+        <h1>Edit Profile</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form|crispy }}
+            {{ profile_form|crispy }}
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+    </div>
+    
+</body>
+</html>
