@@ -1,12 +1,11 @@
 from django import forms
 from django.forms.widgets import DateTimeInput
 from django.utils import timezone
-from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User,Group
 from django.db import models
-from django import forms
 from .models import Blog, Category, UserProfile, JoinRequest 
+from .models import Company
 
 
 class BlogForm(forms.ModelForm):
@@ -140,8 +139,14 @@ class UserProfileEditForm(forms.ModelForm):
         fields = ['photo']
         
         
-        
-from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 
+class CreateCompanyForm(forms.ModelForm):
+    class Meta:
+        model = Company
+        fields = ['name', 'location', 'description']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs['placeholder'] = 'Company name'
+        self.fields['location'].widget.attrs['placeholder'] = 'Company location'
+        self.fields['description'].widget.attrs['placeholder'] = 'Company description'

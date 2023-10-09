@@ -16,11 +16,7 @@
 			<form method="POST">
 				{% csrf_token %}
 				<div class="mb-3">
-					{% comment %}
-					<label for="name" class="form-label" class="visiually-hidden"
-						>Company Name</label
-					>
-					{% endcomment %}
+					<label for="name" class="form-label">Company Name</label>
 					<input
 						name="name"
 						type="text"
@@ -28,6 +24,26 @@
 						id="name"
 						placeholder="Name Your Company"
 					/>
+				</div>
+				<div class="mb-3">
+					<label for="location" class="form-label">Location</label>
+					<input
+						name="location"
+						type="text"
+						class="form-control"
+						id="location"
+						placeholder="Company Location"
+					/>
+				</div>
+				<div class="mb-3">
+					<label for="description" class="form-label">Description</label>
+					<textarea
+						name="description"
+						class="form-control"
+						id="description"
+						placeholder="Company Description"
+						rows="4"
+					></textarea>
 				</div>
 				<button type="submit" class="btn btn-primary">Create</button>
 			</form>

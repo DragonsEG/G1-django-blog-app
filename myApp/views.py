@@ -369,6 +369,8 @@ def createCompany(request):
             _company = Company(
                 name = request.POST.get('name'),
                 manager = request.user,
+                location=request.POST.get('location'),  
+                description=request.POST.get('description'),
             )   
             # Save the post data into the DB
             _company.save()
@@ -462,9 +464,9 @@ def edit_user_name(request):
     return render(request, 'blog/edit_profile.html', {'form': form, 'profile_form': profile_form})
 
 
-def view_user_photo(request):
-    user_profile = request.user.userprofile
-    return render(request, 'blog/profile_user.html', {'user_profile': user_profile})
+# def view_user_photo(request):
+#     user_profile = request.user.userprofile
+#     return render(request, 'blog/profile_user.html', {'user_profile': user_profile})
 @login_required
 def password_change(request):
     if request.method == 'POST':
@@ -497,4 +499,21 @@ def leave_company(request):
 
     return redirect('showBlogs') 
 
+
+def all_company(request):
+    companies = Company.objects.all()
+    
+    company_content = {}
+    
+    for company in companies:
+        content = Content.objects.filter(company=company)
+        company_content[company] = content
+        
+    return render(request, 'blog/company_content.html', {'company_content': company_content})
+
+
+
+def company_detail(request, company_id):
+    company = get_object_or_404(Company, pk=company_id)
+    return render(request, 'company_detail.html', {'company': company})
 

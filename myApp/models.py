@@ -5,10 +5,20 @@ class Company(models.Model):
   ID = models.BigAutoField(auto_created = True, primary_key=True, verbose_name="ID")
   name = models.CharField(max_length=30)
   manager = models.ForeignKey(User, on_delete=models.CASCADE, blank=False)
-  def __str__(self):
-     
-     return self.name
+  location = models.CharField(max_length=100, null=True, blank=True)  
+  description = models.TextField(null=True, blank=True)  
 
+
+  def __str__(self):
+    return self.name
+
+class Content(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.title
   
 class UserProfile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE)

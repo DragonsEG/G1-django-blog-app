@@ -43,7 +43,8 @@ urlpatterns = [
     path('blog/userprofile/' , views.view_profile , name='user'),
     path('edit_user_name/', views.edit_user_name, name='edit_user_name'),
     path('leave_company/', views.leave_company, name='leave_company'),
-    # path('profile', views.profile, name='profile'),
+    path('all_companies_content/', views.all_company, name='all_companies_content'),
+    path('companies/<int:company_id>/', views.company_detail, name='company_detail'),
 ]
 
 
