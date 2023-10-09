@@ -184,7 +184,7 @@
             {% endif %}
             <h4><a href="{% url "blogPage" id=blog.ID %}" style="color: #007bff;">{{ blog.title|capfirst }}</a></h4>
             <div class="meta-info">
-                <p class="meta-info">Created By {{ blog.author.username }} | At {{ blog.created_at }}</p>
+                <p class="meta-info">Created By {{ blog.author.username }} | At {{ blog.created_at }} company: {{ blog.author.userprofile.company }}</p>
             </div>
             <div class="tags">
                 {% if blog.tags.all %}
