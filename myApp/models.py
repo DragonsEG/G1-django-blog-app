@@ -35,6 +35,7 @@ class JoinRequest(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
   company = models.ForeignKey(Company, on_delete=models.CASCADE, blank=True)
   status = models.CharField(max_length=10, choices=[('Pending', 'pending'), ('Approved', 'approved'), ('Rejected', 'rejected')], default="Pending")
+  fromTo = models.CharField(max_length=20, choices=[("WriterToCompany", "WtoC"), ("CompanyToWriter", "CtoW")], default="CtoW")
   
 class Category(models.Model):
     name = models.CharField(max_length=100)

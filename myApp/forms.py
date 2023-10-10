@@ -126,8 +126,6 @@ class UserProfileForm(forms.ModelForm):
         model = UserProfile
         fields = ['user' , 'company' , 'auth_level',]
         
-        
-        
 class UserNameEditForm(forms.ModelForm):
     class Meta:
         model = User

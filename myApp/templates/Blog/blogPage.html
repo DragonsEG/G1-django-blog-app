@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %} {% load crispy_forms_tags %}
-
+{% load my_custom_tags %}
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -187,7 +187,12 @@
         </div>
         
         <div class="author-info">
-            Created By: {{ Blog.author.username }} | At {{ Blog.created_at }}
+            Created By: 
+            <a href="{% url "userProfile" userProfID=Blog.author|userProfID %}">{{ Blog.author.username }}</a>
+            {% if Blog.company %}
+            | Works At: <a href="{% url "companyProfile" company_id=Blog.company.ID %}">{{ Blog.company }}</a>
+            {% endif %}
+            | Published At {{ Blog.created_at }}
         </div>
 
         <div class="tags">
@@ -229,7 +234,7 @@
         {% for comment in Comments %}
         <div class="comment">
             <div class="comment-header">
-                <h5>{{ comment.user.username }}</h5>
+                <h5><a href="{% url "userProfile" userProfID=comment.user|userProfID %}">{{ comment.user.username }}</a></h5>
                 <p>{{ comment.created_at }}</p>
             </div>
             <hr>

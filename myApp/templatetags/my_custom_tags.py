@@ -17,3 +17,8 @@ def isCompanyEmployee(user, company_id):
 def isCompanyManager(user, company_id):
     company = Company.objects.get(ID=company_id)
     return company.manager == user
+
+@register.filter(name='userProfID')
+def userProfID(user):
+    userProf = UserProfile.objects.get(user=user)
+    return userProf.id
