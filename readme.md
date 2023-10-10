@@ -18,7 +18,7 @@
 - **Viewing Company Information (myCompany)**: Users can view information about the company they belong to, such as the number of employees and company-specific blog posts.
 - **Requesting Writer Access to a Company (requestWriter)**: Managers can send requests to users to join their company as writers.
 - **Viewing Company Writers (companyWriters)**: Users can view a list of writers in their company.
-- **Password Change (password_change)**: Easily  change their passwords.
+- **Password Change**: Easily  change their passwords.
 
 
 
