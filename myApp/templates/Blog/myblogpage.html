@@ -218,7 +218,6 @@
         <h2>Company: {{ request.user.userprofile.company }}</h2>
         {% for blog in Blogs %}
         <div class="blog-card">
-                <div class="header-search">
             {% if request.user.userprofile.photo %}
             <div class="user-photo">
                 <img src="{{ request.user.userprofile.photo.url }}" alt="{{ request.user.username }}">
@@ -245,7 +244,7 @@
             <i class="fas fa-plus"></i> Create a Post
         </a>
         {% endif %}
-        <a href="/all_companies_content">all_companies_content</a> 
+        {% comment %} <a href="/all_companies_content">all_companies_content</a>  {% endcomment %}
     </div>
 </body>
 </html>

@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 	{% load static %} {% load crispy_forms_tags %}
+  {% load my_custom_tags %}
 	<head>
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
 		<link href="{% static 'css/home.css' %}" rel="stylesheet" />
-		<title>Notifications</title>
+		<title>Join Requests</title>
 	</head>
 	<body>
 		{% include "Blog/blogNavBar.html" %} 
@@ -19,13 +20,13 @@
         {% for JRequest in joinRequests %}
           <div class="container">
             <p class="fs-4 text-center">
-              <strong><a href="{% url "companyProfile" company_id=JRequest.company.ID %}">{{JRequest.company.name}}</a></strong> Company Asks
-              you to join it as a Writer
+              <strong><a href="{% url "userProfile" userProfID=JRequest.user|userProfID %}">{{JRequest.user.username}}</a></strong> Asks
+              you to join Your Company as a Writer
             </p>
             <div class="d-grid gap-2 d-md-flex" style="justify-content: center">
               <a
                 role="button"
-                href="{% url "approveRequest" company_id=JRequest.company.ID request_id=JRequest.id %}"
+                href="{% url "CompanyApproveReq" userProfID=JRequest.user|userProfID company_id=JRequest.company.ID request_id=JRequest.id %}"
                 class="btn btn-success"
               >
                 Approve

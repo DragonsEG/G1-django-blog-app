@@ -70,14 +70,14 @@
       }
 
       /* Buttons with the "btn" class */
-      .btn {
+      .btn-custom {
         transition: background-color 0.3s ease; /* Add transition */
-      }
+      } 
 
       /* Add hover effect */
-      .btn:hover {
+      .btn-custom:hover {
         background-color: #0056b3;
-      }
+      } 
     </style>
 </head>
 <body>
@@ -87,23 +87,26 @@
       <div class="cotainer-sm container">
         <h1 class="text-center" style="font-weight: 700">{{myCompany.name}} </h1>
         {% comment %} <p class="text-center" style="font-weight: 700">Manager: {{ request.user.username }}</p> {% endcomment %}
-      
         <div class="header-part">
         <p class="text-body-secondary fst-italic" style="font-size: 14.5px">Number of Employee: {{nEmployees}}</p>
         {% if user|isCompanyManager:myCompany.ID %}
         <div>
-            <a class="btn btn-primary" role="button" href="{% url "companyWriters" %}"><i class="fas fa-users"></i> Company Writers</a>
-            <a class="btn btn-outline-primary" role="button" href="{% url "requestWriter" %}"><i class="fas fa-user-plus"></i> Request a Writer</a>
+          <a class="btn btn-primary btn-custom" role="button" href="{% url "companyWriters" %}"><i class="fas fa-users"></i> Company Writers</a>
+          <a class="btn btn-outline-primary btn-custom" role="button" href="{% url "requestWriter" %}"><i class="fas fa-user-plus"></i> Request a Writer</a>
+        </div>
+        {% elif user|isCompanyEmployee:myCompany.ID %}
+        <div>
+          <a href="{% url "leave_company" %}" class="btn btn-outline-danger" role="button"><i class="fa fa-sign-out" aria-hidden="true"></i> Leave Company</a>
         </div>
         {% endif %}
-        </div>
+      </div>
       </div>
       <div class="feed-search">
         <h1>Company Blogs</h1>
           <div> 
               <form method="get" class="d-flex search-form" role="search">
                   <input class="form-control me-2" type="search" name="q" placeholder="Search Company Posts..." {% if query %}value="{{ query }}"{% endif %}>
-                  <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i> Search</button>
+                  <button class="btn btn-primary btn-custom" type="submit"><i class="fas fa-search"></i> Search</button>
               </form>
           </div>
       </div>
@@ -122,19 +125,17 @@
               {% endif %}
             </div>
             {% if request.user|isCompanyManager:myCompany.ID or request.user == blog.author %}
-            <!-- Display edit and delete links for managers and the author -->
-            <a href="{% url 'editBlog' blog_id=blog.ID %}" class="edit-button"><i class="fas fa-edit"></i> Edit</a>
+            <br>
+            <a href="{% url 'editBlog' blog_id=blog.ID %}" class="edit-button"><i class="fas fa-edit"></i> Edit </a>
             <a href="{% url 'deleteBlog' blog_id=blog.ID %}" class="delete-button"><i class="fas fa-trash-alt"></i> Delete</a>
         {% endif %}
       </div>
 </div>
 {% endfor %}
 
-{% if request.user|isCompanyEmployee:myCompany.ID %}
-<a href="{% url "createBlog" %}" class="create-post-btn"><i class="fas fa-plus"></i> Create a Post</a>
-<a href="{% url "leave_company" %}" class="create-post-btn"><i class="fas fa-plus"></i> leave </a>
-{% endif %}
+    {% if request.user|isCompanyEmployee:myCompany.ID %}
+    <a href="{% url "createBlog" %}" class="create-post-btn"><i class="fas fa-plus"></i> Create a Post</a>
+    {% endif %}
 
-</div>
 </body>
 </html>

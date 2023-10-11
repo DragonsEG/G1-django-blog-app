@@ -24,6 +24,7 @@ urlpatterns = [
   path('blog/tagposts/<int:id>', views.tagposts, name='tagposts'),
   path("blog/joinRequests", views.joinRequest, name="joinRequest"),
   path("blog/approveReq/<int:company_id>/<int:request_id>", views.approveRequest, name="approveRequest"),
+  path("blog/approveReq/<int:userProfID>/<int:company_id>/<int:request_id>/", views.companyApproveReq, name="CompanyApproveReq"),
   path("blog/rejectReq/<int:request_id>", views.rejectRequest, name="rejectRequest"),
   path("blog/createCompany", views.createCompany, name="createCompany"),
   path("blog/myCompany", views.myCompany, name="myCompany"),
@@ -40,11 +41,14 @@ urlpatterns = [
     path('change-password/', PasswordChangeView.as_view(), name='password_change'),
     path('change-password/', auth_views.PasswordChangeView.as_view(template_name='change_password.html',success_url='/password-change-done/'  ), name='password_change'),
     path('password-change-done/', auth_views.PasswordChangeDoneView.as_view(template_name='blog/password_change_done.html'), name='password_change_done'),
-    path('blog/userprofile/' , views.view_profile , name='user'),
+    path('blog/myUserProfile/' , views.view_profile , name='user'),
+    path("blog/userProfile/id/<int:userProfID>", views.view_profile, name="userProfile"),
     path('edit_user_name/', views.edit_user_name, name='edit_user_name'),
     path('leave_company/', views.leave_company, name='leave_company'),
-    path('all_companies_content/', views.all_company, name='all_companies_content'),
+    path('blog/companies', views.all_company, name='companies'),
     path('companies/<int:company_id>/', views.company_detail, name='company_detail'),
+    path('blog/requestCompany/id/<int:company_id>', views.requestCompany, name='requestCompany'),
+    path('blog/CompanyRequests', views.joinCompanyRequest, name='companyRequests'),
 ]
 
 

@@ -79,19 +79,12 @@ def loginView(request):
 	return render(request, "Authentication/login.html", context={"form":form})
 
 @login_required
-def view_profile(request):
-    user_profile = UserProfile.objects.get(user=request.user)
-
-    if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=user_profile)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Your profile has been updated.")
-            return redirect('view_profile')
-    else:
-        form = UserProfileForm(instance=user_profile)
-
-    return render(request, 'Blog/profile_user.html', {'form': form, 'user_profile': user_profile})
+def view_profile(request, userProfID=None):
+    if userProfID:
+        user_profile = UserProfile.objects.get(id=userProfID)
+    else:    
+        user_profile = UserProfile.objects.get(user=request.user)
+    return render(request, 'Blog/profile_user.html', {'user_profile': user_profile})
 
 def logoutRequest(request):
     logout(request)
@@ -319,14 +312,57 @@ def category_post_list(request, category_id):
     posts = Blog.objects.filter(categories=category, publish_status='published')
     return render(request, 'category/post_category.html', {'category': category, 'posts': posts})
 
+# Company to Writers Join Requests
 @login_required
 def joinRequest(request):
-    requests = JoinRequest.objects.filter(user=request.user, status="Pending")
+    requests = JoinRequest.objects.filter(user=request.user, status="Pending", fromTo="CtoW")
     emptyRequests = False
     if not requests:
         emptyRequests = True
     return render(request, 'blog/joinRequests.html', {'joinRequests': requests, "emptyRequests": emptyRequests})
 
+@user_passes_test(isManager, login_url='not_allowed')
+def requestWriter(request):
+    if request.method == "POST":
+        form = RequestWriterForm(request.POST)
+        if form.is_valid():
+            userProf = UserProfile.objects.get(user=request.user)
+            myCompany = userProf.company
+            _user = form.cleaned_data["writer"]
+            joinRequest = JoinRequest(
+                user = _user,
+                company = myCompany,
+                fromTo = "CtoW"
+            )
+            joinRequest.save()
+            messages.success(request, f"Your Request has been Sent to {_user.username} Successfully")
+            return redirect("myCompany")
+    else:
+        form = RequestWriterForm()
+    context = {"form": form}
+    return render(request, "blog/requestWriter.html", context)
+
+# Writers to Company Join Requests Action
+def requestCompany(request, company_id):
+    _company = Company.objects.get(ID=company_id)
+    joinRequest = JoinRequest(
+        user = request.user,
+        company = _company,
+        fromTo = "WtoC",
+    )
+    joinRequest.save()
+    messages.success(request, f"Your Request has been Sent to {_company.name} Successfully")
+    return redirect("companies")
+
+# Writers to Company Join Requests Action
+def joinCompanyRequest(request):
+    userProf = UserProfile.objects.get(user=request.user)
+    requests = JoinRequest.objects.filter(company=userProf.company, status="Pending", fromTo="WtoC")
+    emptyRequests = False
+    if not requests:
+        emptyRequests = True
+    return render(request, 'blog/companyRequests.html', {'joinRequests': requests, "emptyRequests": emptyRequests, "userProf": userProf})
+    
 @login_required
 def approveRequest(request, company_id, request_id):
     userProf, created = UserProfile.objects.get_or_create(user=request.user)
@@ -351,7 +387,31 @@ def approveRequest(request, company_id, request_id):
         # # Get the permission you want to remove
         # permission = Permission.objects.get(codename='add_company', content_type__model='company')
         # # Remove the permission from the user
-    return redirect("joinRequest")
+    return redirect("myCompany")
+
+def companyApproveReq(request, userProfID,company_id, request_id):
+    userProf = UserProfile.objects.get(id=userProfID)
+    joinRequest = JoinRequest.objects.get(id=request_id)
+    if userProf.company:
+        joinRequest.delete()
+        messages.error(request,"Cannot Join a Company Because He is already in a one")
+    else:    
+        userProf.company = Company.objects.get(ID=company_id)
+        userProf.save()
+        # request.user.user_permissions.remove(permission)
+        group = Group.objects.get(name='Employee')
+        # Remove the user from existing groups
+        userProf.user.groups.clear()
+        # Add the user to the new group
+        userProf.user.groups.add(group)
+        
+        joinRequest = JoinRequest.objects.get(id=request_id)
+        joinRequest.status = 'Approved'
+        joinRequest.save()
+
+        messages.success(request, f"{userProf.user.username} are now member of Your Company.")
+    return redirect("companyRequests")
+
 
 @login_required
 def rejectRequest(request, request_id):
@@ -394,13 +454,16 @@ def createCompany(request):
     else:
         return redirect("login")
     
-@user_passes_test(isEmployee, login_url='not_allowed')
+
+@user_passes_test(user_is_member, login_url='not_allowed')
 def myCompany(request, company_id=None):
     if company_id:
         myCompany = Company.objects.get(ID=company_id)
-    else:    
+    elif isEmployee(request.user): 
         userProf = UserProfile.objects.get(user=request.user)
         myCompany = userProf.company
+    else:
+        return redirect("not_allowed")
         
     nEmployees = UserProfile.objects.filter(company=myCompany).count() - 1
     myCompanyBlogs = Blog.objects.filter(company=myCompany)
@@ -418,35 +481,11 @@ def myCompany(request, company_id=None):
     } 
     return render(request, "blog/myCompany.html", context)
 
-
-@user_passes_test(isManager, login_url='not_allowed')
-def requestWriter(request):
-    if request.method == "POST":
-        form = RequestWriterForm(request.POST)
-        if form.is_valid():
-            userProf = UserProfile.objects.get(user=request.user)
-            myCompany = userProf.company
-            _user = form.cleaned_data["writer"]
-            joinRequest = JoinRequest(
-                user = _user,
-                company = myCompany
-            )
-            joinRequest.save()
-            messages.success(request, f"Your Request has been Sent to {_user.username} Successfully")
-            return redirect("myCompany")
-    else:
-        form = RequestWriterForm()
-    context = {"form": form}
-    return render(request, "blog/requestWriter.html", context)
-
-
 def companyWriters(request):
     thisWriter = UserProfile.objects.get(user=request.user)
     writers = UserProfile.objects.filter(company=thisWriter.company)
     context = {"writers": writers, "company": thisWriter.company}  # Add "company" to the context
     return render(request, "blog/companyWriters.html", context)
-
-
 
 @login_required
 def edit_user_name(request):
@@ -462,7 +501,6 @@ def edit_user_name(request):
         profile_form = UserProfileEditForm(instance=request.user.userprofile)
     
     return render(request, 'blog/edit_profile.html', {'form': form, 'profile_form': profile_form})
-
 
 # def view_user_photo(request):
 #     user_profile = request.user.userprofile
@@ -489,6 +527,7 @@ def leave_company(request):
             user_profile.company = None
             user_profile.auth_level = 'Member'
             member_group, created = Group.objects.get_or_create(name='Member')
+            request.user.groups.clear()
             request.user.groups.add(member_group)
             user_profile.groups = member_group
             user_profile.save()
@@ -507,13 +546,9 @@ def all_company(request):
     
     for company in companies:
         content = Content.objects.filter(company=company)
-        company_content[company] = content
-        
+        company_content[company] = content    
     return render(request, 'blog/company_content.html', {'company_content': company_content})
-
-
 
 def company_detail(request, company_id):
     company = get_object_or_404(Company, pk=company_id)
     return render(request, 'company_detail.html', {'company': company})
-

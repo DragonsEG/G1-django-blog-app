@@ -1,81 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-{% load static %} {% load crispy_forms_tags %}
-<head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
-    <link href="{% static 'css/home.css' %}" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
-    <title>Create Blog</title>
-</head>
-<body>
-    
-    {% include "Blog/blogNavBar.html" %}
-    <style>
-        /* Existing styles here */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
-        
-        .profile-container {
-            max-width: 600px;
-            margin: 50px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        h1 {
-            color: #333;
-        }
-        
-        p {
-            color: #555;
-            margin-bottom: 10px;
-        }
-        
-        .img-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .img-container img {
-            max-width: 300px; /* Adjust the max width as needed */
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-        }
-        
-        /* Additional styles here */
-        /* For example, you can add a style for the "Edit Profile" link */
-        a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        
-        /* Add more styles as needed */
-    </style>
+	{% load static %} {% load crispy_forms_tags %}
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
+		<link href="{% static 'css/home.css' %}" rel="stylesheet" />
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="{% static 'css/profile.css' %}"
+		/>
+		<title>Create Blog</title>
+	</head>
+	<body>
+		{% include "Blog/blogNavBar.html" %}
+		<style>
+			/* Existing styles here */
+			body {
+				font-family: Arial, sans-serif;
+				margin: 0;
+				padding: 0;
+				background-color: #f0f0f0;
+			}
 
-<div class="profile-container">
-    <b><h1 style="font-weight: bolder;">{{ user.username }}</h1></b>
-    <p>Company: {{ user.userprofile.company }}</p>
-    <p>Joined: {{ user.date_joined }}</p>
-    <a href="{% url 'edit_user_name' %}">Edit Profile</a>
-    <div class="img-container">
-        <h1>{{ request.user.username }}</h1>
-        {% if user_profile.photo %}<img src="{{ user_profile.photo.url }}" alt="{{ request.user.username }}'s Photo">
-        {% else %}
-            <p>No photo available</p>
-        {% endif %}
-    </div>
-</div>
+			.profile-container {
+				max-width: 600px;
+				margin: 50px auto;
+				background-color: #fff;
+				padding: 20px;
+				border-radius: 8px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			}
 
-</body>
+			h1 {
+				color: #333;
+			}
+
+			p {
+				color: #555;
+				margin-bottom: 10px;
+			}
+
+			.img-container {
+				text-align: center;
+				margin-top: 20px;
+			}
+
+			.img-container img {
+				max-width: 300px; /* Adjust the max width as needed */
+				border: 2px solid #ccc;
+				border-radius: 5px;
+				box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+			}
+
+			/* Additional styles here */
+			/* For example, you can add a style for the "Edit Profile" link */
+			a {
+				color: #007bff;
+				text-decoration: none;
+			}
+
+			/* Add more styles as needed */
+		</style>
+
+		<div class="profile-container">
+			<b>
+				<h1 style="font-weight: bolder">{{ user_profile.user.username }}</h1>
+			</b>
+			{% if user_profile.company %}
+			<p>Works at:
+                <a href="{% url "companyProfile" company_id=user_profile.company.ID %}"> 
+                    {{ user_profile.company }} 
+                </a>
+            </p>
+			{% endif %}
+			<p>Joined: {{ user_profile.user.date_joined }}</p>
+			{% if user_profile.user == request.user %}
+			<a href="{% url 'edit_user_name' %}">Edit Profile</a>
+			{% endif %}
+			<div class="img-container">
+				<h1>{{ user_profile.user.username }}</h1>
+				{% if user_profile.photo %}
+				<img
+					src="{{ user_profile.photo.url }}"
+					alt="{{ user_profile.user.username }}'s Photo"
+				/>
+				{% else %}
+				<p>No photo available</p>
+				{% endif %}
+			</div>
+		</div>
+	</body>
 </html>
-

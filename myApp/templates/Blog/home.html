@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %} {% load crispy_forms_tags %}
-
+{% load my_custom_tags %}
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -184,7 +184,13 @@
             {% endif %}
             <h4><a href="{% url "blogPage" id=blog.ID %}" style="color: #007bff;">{{ blog.title|capfirst }}</a></h4>
             <div class="meta-info">
-                <p class="meta-info">Created By {{ blog.author.username }} | At {{ blog.created_at }} company: {{ blog.author.userprofile.company }}</p>
+                <p class="meta-info">
+                    Created By <a href="{% url "userProfile" userProfID=blog.author|userProfID %}">{{ blog.author.username }}</a>
+                    | At {{ blog.created_at }}          
+                    {% if blog.company %}
+                    | Company: <a href="{% url "companyProfile" company_id=blog.company.ID %}">{{ blog.company }}</a>
+                    {% endif %} 
+                </p>
             </div>
             <div class="tags">
                 {% if blog.tags.all %}
