@@ -3,6 +3,7 @@ services:
   blogapp:
     container_name: BlogAppContainer
     image: blogappimage
+    command: ['sh','./start.sh']
     build: .
     volumes:
       - .:/blogapp:ro
@@ -11,13 +12,13 @@ services:
     depends_on:
       - db
   db:
-    image: postgres:16
+    image: postgres:13
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     ports:
-      - 5435:5432
+      - 5432:5432
     environment:
-      - POSTGRES_DB=BlogDB
+      - POSTGRES_DB=blogdatabase
       - POSTGRES_USER=dragonuser
       - POSTGRES_PASSWORD=Dragon1234Fire
 

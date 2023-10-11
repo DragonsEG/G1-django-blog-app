@@ -5,5 +5,5 @@ django-crispy-forms==2.0
 Pillow==10.0.1
 soupsieve==2.5
 typing_extensions==4.8.0
-psycopg2-binary
+psycopg2
 crispy-bootstrap5

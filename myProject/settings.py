@@ -89,11 +89,11 @@ WSGI_APPLICATION = 'myProject.wsgi.application'
 DATABASES = {
       'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'BlogDB',
+        'NAME': 'blogdatabase',
         'USER': 'dragonuser',
         'PASSWORD': 'Dragon1234Fire',
         'HOST': 'db',  # This is the ip of the PostgreSQL service Container defined in docker-compose.yml file
-        'PORT': '5435',  # PostgreSQL  port
+        'PORT': '5432',  # PostgreSQL  port
     }
 }
 
