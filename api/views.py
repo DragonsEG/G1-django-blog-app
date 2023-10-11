@@ -9,25 +9,7 @@ class BlogViewSet(viewsets.ModelViewSet):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializer
     
-    @action(detail=True, methods=['DELETE'])
-    def delete_blog(self, request, pk=None):
-        try:
-            blog = self.get_object()
-            blog.delete()
-            return Response(status=204)  
-        except Blog.DoesNotExist:
-            return Response(status=404)  
-        
-    @action(detail=True, methods=['PUT'], serializer_class=BlogSerializer)
-    def update_blog(self, request, pk=None):
-        try:
-            blog = self.get_object()
-            serializer = self.get_serializer(blog, data=request.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data)
-        except Blog.DoesNotExist:
-            return Response(status=404) 
+
 
 class CompanyViewSet(viewsets.ModelViewSet):
     queryset = Company.objects.all()
