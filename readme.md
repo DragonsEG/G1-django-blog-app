@@ -72,6 +72,99 @@ python -m venv venv
   ```
 
 
+## API Endpoints
+
+The Blog Management System provides a RESTful API that allows  interact with the application programmatically. Below, you'll find details about the available API endpoints and their functionalities.
+
+### Blogs
+
+- **List Blogs**: Retrieve a list of all blogs.
+  - Endpoint: `/api/blogs/`
+  - Method: GET
+
+- **Create Blog**: Create a new blog post.
+  - Endpoint: `/api/blogs/`
+  - Method: POST
+
+- **Retrieve Blog**: Get details of a specific blog post.
+  - Endpoint: `/api/blogs/{blog_id}/`
+  - Method: GET
+
+- **Update Blog**: Update an existing blog post.
+  - Endpoint: `/api/blogs/{blog_id}/`
+  - Method: PUT
+
+- **Delete Blog**: Delete a blog post.
+  - Endpoint: `/api/blogs/{blog_id}/`
+  - Method: DELETE
+
+### Companies
+
+- **List Companies**: Retrieve a list of all companies.
+  - Endpoint: `/api/companies/`
+  - Method: GET
+
+- **Create Company**: Create a new company.
+  - Endpoint: `/api/companies/`
+  - Method: POST
+
+- **Retrieve Company**: Get details of a specific company.
+  - Endpoint: `/api/companies/{company_id}/`
+  - Method: GET
+
+- **Update Company**: Update an existing company.
+  - Endpoint: `/api/companies/{company_id}/`
+  - Method: PUT
+
+- **Delete Company**: Delete a company.
+  - Endpoint: `/api/companies/{company_id}/`
+  - Method: DELETE
+
+### Categories
+
+- **List Categories**: Retrieve a list of all categories.
+  - Endpoint: `/api/categories/`
+  - Method: GET
+
+- **Create Category**: Create a new category.
+  - Endpoint: `/api/categories/`
+  - Method: POST
+
+- **Retrieve Category**: Get details of a specific category.
+  - Endpoint: `/api/categories/{category_id}/`
+  - Method: GET
+
+- **Update Category**: Update an existing category.
+  - Endpoint: `/api/categories/{category_id}/`
+  - Method: PUT
+
+- **Delete Category**: Delete a category.
+  - Endpoint: `/api/categories/{category_id}/`
+  - Method: DELETE
+
+### Tags
+
+- **List Tags**: Retrieve a list of all tags.
+  - Endpoint: `/api/tags/`
+  - Method: GET
+
+- **Create Tag**: Create a new tag.
+  - Endpoint: `/api/tags/`
+  - Method: POST
+
+- **Retrieve Tag**: Get details of a specific tag.
+  - Endpoint: `/api/tags/{tag_id}/`
+  - Method: GET
+
+- **Update Tag**: Update an existing tag.
+  - Endpoint: `/api/tags/{tag_id}/`
+  - Method: PUT
+
+- **Delete Tag**: Delete a tag.
+  - Endpoint: `/api/tags/{tag_id}/`
+  - Method: DELETE
+
+
 ## Directory Structure
 
 - `myApp/`: The main Django application directory.
