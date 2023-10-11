@@ -107,6 +107,10 @@ def createBlog(request):
                 blog.is_draft = is_draft
                 userProf, created = UserProfile.objects.get_or_create(user=request.user)
                 blog.company = userProf.company or None
+                if form.cleaned_data.get('publish_with_company'):
+                    blog.company = userProf.company
+                else:
+                    blog.company = None
                 blog.save()
                 # Check if a category has been selected
                 selected_categories = form.cleaned_data.get('categories')

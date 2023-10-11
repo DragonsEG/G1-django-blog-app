@@ -35,6 +35,10 @@ class BlogForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False,  
     )
+    publish_with_company = forms.BooleanField(
+        label="Publish with Company",
+        required=False,
+    )
 
     class Meta:
         model = Blog
