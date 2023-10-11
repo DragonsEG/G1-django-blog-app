@@ -24,4 +24,6 @@ from myApp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('myApp.urls')),
+    path('api/', include('api.urls')),
+    
 ]
