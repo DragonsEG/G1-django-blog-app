@@ -89,13 +89,13 @@ WSGI_APPLICATION = 'myProject.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-      'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'blogdatabase',
-        'USER': 'dragonuser',
-        'PASSWORD': 'Dragon1234Fire',
-        'HOST': 'db',  # This is the ip of the PostgreSQL service Container defined in docker-compose.yml file
-        'PORT': '5432',  # PostgreSQL  port
+       'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3'
+        # 'USER': 'dragonuser',
+        # 'PASSWORD': 'Dragon1234Fire',
+        # 'HOST': 'sqlite ',  # This is the ip of the PostgreSQL service Container defined in docker-compose.yml file
+        # 'PORT': '5435',  # PostgreSQL  port}
     }
 }
 # DATABASES = {
