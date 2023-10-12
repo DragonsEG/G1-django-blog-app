@@ -177,7 +177,38 @@ def addComment(request, blog_id):
             _comment.save()
         return redirect("blogPage", id=blog_id)
     else:
-        return redirect("login")      
+        return redirect("login")
+    
+def upVote(request, comment_id):
+    comment = Comment.objects.get(ID=comment_id)
+    # Check if Current User already has make a upVote to this comment
+    if (request.user in comment.upVote.all()):
+        # remove his upVote if the user on the button that is already upVoted
+        comment.upVote.remove(request.user)
+    else:
+        # add his upVote if the user on the button that is not upVoted
+        comment.upVote.add(request.user)   
+        # if the user did downVoted and wants to upvote it then remove the downvote and add the upvote
+        if (request.user in comment.downVote.all()):
+            comment.downVote.remove(request.user)
+    comment.save()
+    messages.info(request, 'You have upVoted the Comment')
+    return redirect("blogPage", id=comment.blog.ID)
+    
+def downVote(request, comment_id):
+    comment = Comment.objects.get(ID=comment_id)
+    if (request.user in comment.downVote.all()):
+        # remove his upVote if the user on the button that is already downVoted
+        comment.downVote.remove(request.user)
+    else:
+        # add his upVote if the user on the button that is not downVoted
+        comment.downVote.add(request.user)
+        # if the user did upVoted and wants to downvote it then remove the upvote and add the downvote
+        if (request.user in comment.upVote.all()):
+            comment.upVote.remove(request.user)
+    comment.save()
+    messages.info(request, 'You have DownVoted the Comment')
+    return redirect("blogPage", id=comment.blog.ID)                 
 
 @user_passes_test(user_is_member, login_url='not_allowed')
 def editBlog(request, blog_id):

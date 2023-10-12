@@ -31,6 +31,8 @@ urlpatterns = [
   path("blog/requestWriter", views.requestWriter, name="requestWriter"),
   path("blog/companyWriters", views.companyWriters, name="companyWriters"),
   path("blog/companyProfile/id/<int:company_id>", views.myCompany, name="companyProfile"),
+  path("blog/upVoteComment/id/<int:comment_id>", views.upVote, name="upVote"),
+  path("blog/downVoteComment/id/<int:comment_id>", views.downVote, name="downVote"),
   # ---------------------------------------------------------------------------
     path('blog/categories/', category_list, name='category_list'),
     path('blog/category/', category_list1, name='category_list1'),

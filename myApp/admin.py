@@ -19,6 +19,7 @@ admin.site.register(JoinRequest)
 admin.site.register(Company)
 admin.site.register(Tag)
 admin.site.register(Category)
+admin.site.register(Comment)
 
 #ahmedreda
 #ahmed@gmail.com

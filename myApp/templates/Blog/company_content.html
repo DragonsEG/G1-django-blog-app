@@ -170,7 +170,7 @@
             </div>     
             {% if request.user|has_group:"Employee" %}
                 <div title="You are already in a Company">
-                    <a href="{% url "requestCompany" company_id=company.ID %}" class="btn btn-primary disabled" role="button" style="font-size: 14px">Send Join Request</a>
+                    <a href="{% url "not_allowed" %}" class="btn btn-primary disabled" role="button" style="font-size: 14px">Send Join Request</a>
                 </div>
             {% elif not request.user|has_group:"Manager" %}
                 <a href="{% url "requestCompany" company_id=company.ID %}" class="btn btn-primary" role="button" style="font-size: 14px">Send Join Request</a>   

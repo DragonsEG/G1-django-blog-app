@@ -241,9 +241,26 @@
             <div class="comment-content">
                 <p>{{ comment.content }}</p>
             </div>
+            <div>
+                <a href="{% url "upVote" comment_id=comment.ID %}">
+                    {% if request.user in comment.upVote %}
+                    <i class="bi bi-caret-up" color="blue"></i>
+                    {% else %}
+                    <i class="bi bi-caret-up"></i>
+                    {% endif %}
+                </a>
+                {{ comment.upVote|length }}
+                <a href="{% url "downVote" comment_id=comment.ID %}">
+                    {% if request.user in comment.downVote %}
+                    <i class="bi bi-caret-down" color="blue"></i>
+                    {% else %}
+                    <i class="bi bi-caret-down"></i>
+                    {% endif %}
+                </a>
+                {{ comment.downVote|length }}
+            </div>
         </div>
         {% endfor %}
-
     </div>
 </body>
 </html>

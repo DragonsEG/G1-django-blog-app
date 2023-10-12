@@ -3,10 +3,10 @@ services:
   blogapp:
     container_name: BlogAppContainer
     image: blogappimage
-    command: ['sh','./start.sh']
+    command: ["sh", "./start.sh"]
     build: .
     volumes:
-      - .:/blogapp:ro
+      - .:/blogapp
     ports:
       - 8000:8000
     depends_on:
