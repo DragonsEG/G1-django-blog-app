@@ -77,5 +77,7 @@ class Comment(models.Model):
   content = models.TextField()
   user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False)
   blog = models.ForeignKey(Blog, on_delete=models.CASCADE, blank=False)
+  upVote = models.ManyToManyField(User, blank=True, related_name="upVotes")
+  downVote = models.ManyToManyField(User, blank=True, related_name="downVotes")
   created_at = models.DateTimeField(auto_now_add=True, blank=True)
   updated_at = models.DateTimeField(auto_now=True)

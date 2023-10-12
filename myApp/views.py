@@ -10,8 +10,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from django.contrib.auth.models import Group,Permission  # Import the Group model at the top of your views.py
 from django.contrib.auth.forms import PasswordChangeForm
-
-
+from django.db.models import Count
 
 def user_is_member(user):
     return user.is_superuser or not user.groups.filter(name='Viewer').exists()
@@ -156,13 +155,13 @@ def showBlogs(request):
     return render(request, "Blog/home.html", context)
 
 def blogPage(request, id):
-        # Get object from Blog Model by its ID
-        _blog = Blog.objects.get(ID=id)
-        comments = Comment.objects.filter(blog=_blog).order_by("-created_at")
-        
-        context = {"Blog": _blog , "Comments": comments} 
-        # Render home page with help of context data (the Dynamic content)          
-        return render(request, "Blog/blogPage.html", context)
+    # Get object from Blog Model by its ID
+    _blog = Blog.objects.get(ID=id)
+    comments = Comment.objects.filter(blog=_blog).annotate(upVotes_count=Count('upVote'), downVotes_count=Count('upVote')).order_by("-upVotes_count","downVotes_count","-created_at")
+    
+    context = {"Blog": _blog , "Comments": comments} 
+    # Render home page with help of context data (the Dynamic content)          
+    return render(request, "Blog/blogPage.html", context)
 
 def addComment(request, blog_id):
     if request.user.is_authenticated:    
@@ -177,7 +176,38 @@ def addComment(request, blog_id):
             _comment.save()
         return redirect("blogPage", id=blog_id)
     else:
-        return redirect("login")      
+        return redirect("login")
+    
+def upVote(request, comment_id):
+    comment = Comment.objects.get(ID=comment_id)
+    # Check if Current User already has make a upVote to this comment
+    if (request.user in comment.upVote.all()):
+        # remove his upVote if the user on the button that is already upVoted
+        comment.upVote.remove(request.user)
+    else:
+        # add his upVote if the user on the button that is not upVoted
+        comment.upVote.add(request.user)   
+        # if the user did downVoted and wants to upvote it then remove the downvote and add the upvote
+        if (request.user in comment.downVote.all()):
+            comment.downVote.remove(request.user)
+    comment.save()
+    messages.info(request, 'You have upVoted the Comment')
+    return redirect("blogPage", id=comment.blog.ID)
+    
+def downVote(request, comment_id):
+    comment = Comment.objects.get(ID=comment_id)
+    if (request.user in comment.downVote.all()):
+        # remove his upVote if the user on the button that is already downVoted
+        comment.downVote.remove(request.user)
+    else:
+        # add his upVote if the user on the button that is not downVoted
+        comment.downVote.add(request.user)
+        # if the user did upVoted and wants to downvote it then remove the upvote and add the downvote
+        if (request.user in comment.upVote.all()):
+            comment.upVote.remove(request.user)
+    comment.save()
+    messages.info(request, 'You have DownVoted the Comment')
+    return redirect("blogPage", id=comment.blog.ID)                 
 
 @user_passes_test(user_is_member, login_url='not_allowed')
 def editBlog(request, blog_id):
