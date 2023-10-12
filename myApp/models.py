@@ -13,7 +13,7 @@ class Company(models.Model):
   def __str__(self):
     return self.name
   def get_absolute_url(self):
-    return reverse("company_detail", args=[self.ID,])
+    return reverse("companyProfile", args=[self.ID,])
 class Content(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
@@ -23,7 +23,7 @@ class Content(models.Model):
         return self.title
   
 class UserProfile(models.Model):
-  user = models.OneToOneField(User, on_delete=models.CASCADE)
+  user = models.OneToOneField(User, on_delete=models.CASCADE,related_name="userprofile")
   company = models.ForeignKey(Company, on_delete=models.SET_NULL, blank=True, null=True)
   auth_level = models.CharField(max_length=10, null=True, choices=[('viewer', 'Viewer'), ('member', 'Member'), ('admin', 'Admin'), ('manager', 'Manager')], default="Member")
   groups = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)

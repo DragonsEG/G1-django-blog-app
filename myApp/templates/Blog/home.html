@@ -185,7 +185,7 @@
             <h4><a href="{{ blog.get_absolute_url }}" style="color: #007bff;">{{ blog.title|capfirst }}</a></h4>
             <div class="meta-info">
                 <p class="meta-info">
-                    Created By <a href="{% url "userProfile" userProfID=blog.author|userProfID %}">{{ blog.author.username }}</a>
+                    Created By <a href="{{ blog.author.userprofile.get_absolute_url }}">{{ blog.author.username }}</a>
                     | At {{ blog.created_at }}          
                     {% if blog.company %}
                     | Company: <a href="{% url "companyProfile" company_id=blog.company.ID %}">{{ blog.company }}</a>
