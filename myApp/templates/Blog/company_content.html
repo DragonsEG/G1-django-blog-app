@@ -164,7 +164,7 @@
 		<h1>Companies</h1>
 		{% for company, content in company_content.items %}
         <div class="blog-card">
-            <h4><a href="{% url "companyProfile" company_id=company.ID%}">{{ company.name }}</a></h4>
+            <h4><a href="{{ company.get_absolute_url }}">{{ company.name }}</a></h4>
             <div class="meta-info">
             <p>Location: {{ company.location }} <br>Description: {{ company.description }}</p>
             </div>     

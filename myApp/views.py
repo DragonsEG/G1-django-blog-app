@@ -323,7 +323,7 @@ def joinRequest(request):
     emptyRequests = False
     if not requests:
         emptyRequests = True
-    return render(request, 'blog/joinRequests.html', {'joinRequests': requests, "emptyRequests": emptyRequests})
+    return render(request, 'Blog/joinRequests.html', {'joinRequests': requests, "emptyRequests": emptyRequests})
 
 @user_passes_test(isManager, login_url='not_allowed')
 def requestWriter(request):
@@ -344,7 +344,7 @@ def requestWriter(request):
     else:
         form = RequestWriterForm()
     context = {"form": form}
-    return render(request, "blog/requestWriter.html", context)
+    return render(request, "Blog/requestWriter.html", context)
 
 # Writers to Company Join Requests Action
 def requestCompany(request, company_id):
@@ -365,7 +365,7 @@ def joinCompanyRequest(request):
     emptyRequests = False
     if not requests:
         emptyRequests = True
-    return render(request, 'blog/companyRequests.html', {'joinRequests': requests, "emptyRequests": emptyRequests, "userProf": userProf})
+    return render(request, 'Blog/companyRequests.html', {'joinRequests': requests, "emptyRequests": emptyRequests, "userProf": userProf})
     
 @login_required
 def approveRequest(request, company_id, request_id):
@@ -454,7 +454,7 @@ def createCompany(request):
             messages.success(request, f"You are the Manager of {_company.name} Company Now.")
             return redirect("myCompany")
         else:
-            return render(request, "blog/createCompany.html")
+            return render(request, "Blog/createCompany.html")
     else:
         return redirect("login")
     
@@ -483,13 +483,13 @@ def myCompany(request, company_id=None):
         "query": query,
         "blog": None  # Add the 'blog' object to the context
     } 
-    return render(request, "blog/myCompany.html", context)
+    return render(request, "Blog/myCompany.html", context)
 
 def companyWriters(request):
     thisWriter = UserProfile.objects.get(user=request.user)
     writers = UserProfile.objects.filter(company=thisWriter.company)
     context = {"writers": writers, "company": thisWriter.company}  # Add "company" to the context
-    return render(request, "blog/companyWriters.html", context)
+    return render(request, "Blog/companyWriters.html", context)
 
 @login_required
 def edit_user_name(request):
@@ -504,7 +504,7 @@ def edit_user_name(request):
         form = UserNameEditForm(instance=request.user)
         profile_form = UserProfileEditForm(instance=request.user.userprofile)
     
-    return render(request, 'blog/edit_profile.html', {'form': form, 'profile_form': profile_form})
+    return render(request, 'Blog/edit_profile.html', {'form': form, 'profile_form': profile_form})
 
 # def view_user_photo(request):
 #     user_profile = request.user.userprofile
@@ -521,7 +521,7 @@ def password_change(request):
             messages.error(request, 'Please correct the error below.')
     else:
         form = PasswordChangeForm(request.user)
-    return render(request, 'blog/change_password.html', {'form': form})
+    return render(request, 'Blog/change_password.html', {'form': form})
 
 def leave_company(request):
     if request.user.is_authenticated:
@@ -551,8 +551,8 @@ def all_company(request):
     for company in companies:
         content = Content.objects.filter(company=company)
         company_content[company] = content    
-    return render(request, 'blog/company_content.html', {'company_content': company_content})
+    return render(request, 'Blog/company_content.html', {'company_content': company_content})
 
 def company_detail(request, company_id):
     company = get_object_or_404(Company, pk=company_id)
-    return render(request, 'company_detail.html', {'company': company})
+    return render(request, 'Blog/company_detail.html', {'company': company})

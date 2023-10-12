@@ -13,12 +13,7 @@ class Company(models.Model):
   def __str__(self):
     return self.name
   def get_absolute_url(self):
-    
-    return reverse("companyProfile",
-                    args=[
-                      self.ID,
-                      ]
-                    )
+    return reverse("company_detail", args=[self.ID,])
 class Content(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
@@ -37,6 +32,9 @@ class UserProfile(models.Model):
 
   # def __str__(self):
         # return self.user.username
+  def get_absolute_url(self):
+    return reverse('userProfile',
+                   args=[self.pk])
 
 class JoinRequest(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
