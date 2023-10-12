@@ -188,9 +188,9 @@
         
         <div class="author-info">
             Created By: 
-            <a href="{% url "userProfile" userProfID=Blog.author|userProfID %}">{{ Blog.author.username }}</a>
+            <a href="{{Blog.author.userprofile.get_absolute_url}}">{{ Blog.author.username }}</a>
             {% if Blog.company %}
-            | Works At: <a href="{% url "companyProfile" company_id=Blog.company.ID %}">{{ Blog.company }}</a>
+            | Works At: <a href="{{ Blog.company.get_absolute_url}}">{{ Blog.company }}</a>
             {% endif %}
             | Published At {{ Blog.created_at }}
         </div>

@@ -218,7 +218,6 @@
         <h2>Company: {{ request.user.userprofile.company }}</h2>
         {% for blog in Blogs %}
         <div class="blog-card">
-                <div class="header-search">
             {% if request.user.userprofile.photo %}
             <div class="user-photo">
                 <img src="{{ request.user.userprofile.photo.url }}" alt="{{ request.user.username }}">
@@ -226,7 +225,7 @@
         </div>
     
             {% endif %}
-            <h2><a href="{% url "blogPage" id=blog.ID %}" style="color: #007bff;">{{ blog.title }}</a></h2>
+            <h2><a href="{{ blog.get_absolute_url }}" style="color: #007bff;">{{ blog.title }}</a></h2>
             <div class="meta-info">
                 <p class="meta-info">Created By {{ blog.author.username }} At {{ blog.created_at }}</p>
             </div>

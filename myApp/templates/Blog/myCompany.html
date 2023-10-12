@@ -113,7 +113,7 @@
     </div>
       {% for blog in companyBlogs %}
       <div class="container-sm container">
-          <h4><a href="{% url "blogPage" id=blog.ID %}">{{ blog.title|capfirst }}</a></h4>
+          <h4><a href="{{ blog.get_absolute_url }}">{{ blog.title|capfirst }}</a></h4>
           <div class="meta-info">
               <p class="meta-info">Created By {{ blog.author.username }} | At {{ blog.created_at }} | {{myCompany.name}} Company</p>
           </div>

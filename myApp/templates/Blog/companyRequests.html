@@ -20,7 +20,7 @@
         {% for JRequest in joinRequests %}
           <div class="container">
             <p class="fs-4 text-center">
-              <strong><a href="{% url "userProfile" userProfID=JRequest.user|userProfID %}">{{JRequest.user.username}}</a></strong> Asks
+              <strong><a href="{{ JRequest.user.userprofile.get_absolute_url }}">{{JRequest.user.username}}</a></strong> Asks
               you to join Your Company as a Writer
             </p>
             <div class="d-grid gap-2 d-md-flex" style="justify-content: center">
