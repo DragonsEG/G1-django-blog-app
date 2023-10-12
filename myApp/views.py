@@ -10,8 +10,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from django.contrib.auth.models import Group,Permission  # Import the Group model at the top of your views.py
 from django.contrib.auth.forms import PasswordChangeForm
-
-
+from django.db.models import Count
 
 def user_is_member(user):
     return user.is_superuser or not user.groups.filter(name='Viewer').exists()
@@ -156,13 +155,13 @@ def showBlogs(request):
     return render(request, "Blog/home.html", context)
 
 def blogPage(request, id):
-        # Get object from Blog Model by its ID
-        _blog = Blog.objects.get(ID=id)
-        comments = Comment.objects.filter(blog=_blog).order_by("-created_at")
-        
-        context = {"Blog": _blog , "Comments": comments} 
-        # Render home page with help of context data (the Dynamic content)          
-        return render(request, "Blog/blogPage.html", context)
+    # Get object from Blog Model by its ID
+    _blog = Blog.objects.get(ID=id)
+    comments = Comment.objects.filter(blog=_blog).annotate(upVotes_count=Count('upVote'), downVotes_count=Count('upVote')).order_by("-upVotes_count","downVotes_count","-created_at")
+    
+    context = {"Blog": _blog , "Comments": comments} 
+    # Render home page with help of context data (the Dynamic content)          
+    return render(request, "Blog/blogPage.html", context)
 
 def addComment(request, blog_id):
     if request.user.is_authenticated:    
