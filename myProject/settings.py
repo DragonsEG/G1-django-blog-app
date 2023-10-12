@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'myApp.apps.MyappConfig',
+    'rest_framework',
     'api',
     # 'users.apps.UsersConfig',
     'django.contrib.admin',
@@ -45,7 +46,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     "crispy_bootstrap5",
-    'rest_framework',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = ('bootstrap5',)

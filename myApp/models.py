@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User , Group
+from django.urls import reverse
 # Create your models here.  
 class Company(models.Model):
   ID = models.BigAutoField(auto_created = True, primary_key=True, verbose_name="ID")
@@ -11,7 +12,13 @@ class Company(models.Model):
 
   def __str__(self):
     return self.name
-
+  def get_absolute_url(self):
+    
+    return reverse("companyProfile",
+                    args=[
+                      self.ID,
+                      ]
+                    )
 class Content(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
@@ -64,6 +71,9 @@ class Blog(models.Model):
   def __str__(self):
       return self.title
 
+  def get_absolute_url(self):
+    
+    return reverse("blogPage",args=[self.ID,])
 class Comment(models.Model):
   ID = models.BigAutoField(auto_created = True, primary_key=True, verbose_name="ID")
   content = models.TextField()
